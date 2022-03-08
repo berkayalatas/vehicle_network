@@ -3,7 +3,7 @@ import PrivateRoute from "../PrivateRoute";
 import Nav from "../../components/navbar/Nav";
 import { useRouter } from "next/dist/client/router";
 import { useAuth } from "../../contexts/AuthContext";
-import { db } from "../../firebase_config";
+import { db, getFirestore } from "../../firebase_config";
 import { format } from "date-fns";
 import "react-date-range/dist/styles.css"; // main style file for date picker
 import "react-date-range/dist/theme/default.css"; // theme css file date picker
@@ -12,10 +12,22 @@ import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-load
 import style from "../../styles/carListing.module.css";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+import {
+  writeBatch,
+  doc,
+  getDoc,
+  getDocs,
+  collection,
+  query,
+  where,
+} from "firebase/firestore";
 
-function ListCar() {
+/* Mapbox Access Token */
+mapboxgl.accessToken = process.env.mapbox_access_token;
+
+function UpdateCar() {
   const router = useRouter();
-  const { user, currentUser } = useAuth();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   /* User */
@@ -23,6 +35,8 @@ function ListCar() {
   const [drivingLicenceNo, setDrivingLicenceNo] = useState("");
   const [roomNo, setRoomNo] = useState("");
   /* Car Info*/
+  const [car, setCar] = useState([]);
+  const [carId, setCarId] = useState(0); //unique identifier for car
   const [city, setCity] = useState("");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
@@ -38,6 +52,11 @@ function ListCar() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [price, setPrice] = useState("");
+  const [rentedFrom, setRentedFrom] = useState("");
+  const [rentedTo, setRentedTo] = useState("");
+
+  /*get carID from URL */
+  const { carID } = router.query;
 
   /* Date Range*/
   const dateRange = {
@@ -45,30 +64,101 @@ function ListCar() {
     endDate: endDate,
     key: "selection",
   };
-
   /* Format Dates */
   const formattedStartDate = format(new Date(startDate), "dd-MM-yyyy");
   const formattedEndDate = format(new Date(endDate), "dd-MM-yyyy");
 
-  /* Map related states */
+  /* Date Picker function for selection */
+  const handleDatePicker = (ranges) => {
+    setStartDate(ranges.selection.startDate);
+    setEndDate(ranges.selection.endDate);
+  };
+
+  /* Map states */
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [lng, setLng] = useState(8.8127);
   const [lat, setLat] = useState(49.2485);
   const [zoom, setZoom] = useState(4);
 
-  /* Mapbox Access Token */
-  mapboxgl.accessToken = process.env.mapbox_access_token;
+  /* Fetch Car Data */
+  useEffect(() => {
+    const fetchData = () => {
+      setLoading(true);
+      const myCar = db.collection("cars");
+      myCar
+        .get()
+        .then((data) => {
+          if (data.size === 0) {
+            console.log("Car not found.");
+          }
+          setLoading(false);
+          const cars = data.docs.map((doc) => {
+            return { id: doc.id, ...doc.data() };
+          });
+          if (user.uid) {
+            const filterCar = cars.filter(
+              (theCar) => theCar.car["carID"] == carID
+            );
+            setCar(filterCar);
+          } else {
+            setCar(car);
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to bring car", error);
+          setError(error);
+        });
+    };
+    fetchData();
+  }, []);
+
+  console.log(car);
+
+  /* Bring the values from DB and set them*/
+  useEffect(() => {
+    car
+      ?.filter((c) => c.car["carID"] == carID)
+      .map((c) => {
+        setCity(c?.car["city"]);
+        setCarId(c?.car["carID"]);
+        setLng(c?.car["location"]["lng"]);
+        setLat(c?.car["location"]["lat"]);
+        setPhoneNumber(c?.user["phoneNumber"]);
+        setDrivingLicenceNo(c?.user["drivingLicenceNo"]);
+        setBrand(c?.car["brand"]);
+        setModel(c?.car["model"]);
+        setImg1(c?.car["carImage"]["img1"]);
+        setCarDescription(c?.car["carDescription"]);
+        setNumberOfSeat(c?.car["numberOfSeat"]);
+        setNumberOfDoor(c?.car["numberOfDoor"]);
+        setPower(c?.car["power"]);
+        setPrice(c?.reservationDetails["price"]);
+        setRentedFrom(c?.reservationDetails["startDate"]);
+        setRentedTo(c?.reservationDetails["endDate"]);
+      });
+  }, [car]);
+
+  //   setTimeout(() => {
+  //     car
+  //       ?.filter((c) => c.car["carID"] == carID)
+  //       .map((c) => {
+  //         setLng(c?.car["location"]["lng"]);
+  //         setLat(c?.car["location"]["lat"]);
+  //       });
+  //   });
 
   /* Mapbox geolocation and find user location, define marker here */
   useEffect(() => {
     if (map.current) return; // initialize map only once
+
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/berkayalatas/cl082a0ql001r14p4m2jypcqr",
       center: [lng, lat],
       zoom: zoom,
     });
+
     let geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       marker: {
@@ -88,11 +178,6 @@ function ListCar() {
         showUserHeading: true,
       })
     );
-  }, []);
-
-  /* Click event and create marker */
-  useEffect(() => {
-    if (!map.current) return; // wait for map to initialize
     const marker = new mapboxgl.Marker({
       color: "#3f97f2",
     });
@@ -101,78 +186,55 @@ function ListCar() {
       setLng(event.lngLat.lng.toFixed(4));
       setLat(event.lngLat.lat.toFixed(4));
     });
-  }, []);
+  });
 
-  /* Change longitude and latitude on move */
-  useEffect(() => {
-    if (!map.current) return; // wait for map to initialize
-    map.current.on("move", () => {
-      setLng(map.current.getCenter().lng.toFixed(4));
-      setLat(map.current.getCenter().lat.toFixed(4));
-      setZoom(map.current.getZoom().toFixed(2));
+  async function handleUpdate() {
+    //!TODO this function may include a bug
+    const q = query(collection(db, "cars"), where("user.userID", "==", user.uid));
+    var docID;
+    //console.log(carID,q)
+    const querySnapshot = await getDocs(q);
+    console.log(carId)
+
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id);
+      const myData = doc.data()
+      if(myData['car']['carID'] == carId){
+        docID = doc.id;
+      }
+      console.log("Document data:", doc.data());
+      
     });
-  }, []);
-  
-  /* using timestamp generate a car id */
-  function toTimestamp(strDate){
-    var datum = Date.parse(strDate);
-    return datum/1000;
- }
 
-  /* Firebase Database JSON structure for car listing */
-  const newListing = {
-    user: {
-      userID: user.uid,
-      userEmail: user.email,
-      phoneNumber: phoneNumber,
-      drivingLicenceNo: drivingLicenceNo,
-      roomNo: roomNo, // TODO: chat application integration
-    },
-    car: {
-      carID: toTimestamp(new Date()), // timestamp (unique ID)
-      location: {
-        lng: lng,
-        lat: lat,
+    const batch = writeBatch(db);
+    const updatedStates = doc(db, "cars", docID);
+    batch.update(updatedStates, {
+      car: {
+        carID: carId,
+        location: {
+          lng: lng,
+          lat: lat,
+        },
+        city: city,
+        brand: brand,
+        model: model,
+        carImage: {
+          img1: img1,
+          img2: img2,
+        },
+        carDescription: carDescription,
+        numberOfDoor: numberOfDoor,
+        numberOfSeat: numberOfSeat,
+        power: power, //gas or electric
+        available: available,
       },
-      city: city,
-      brand: brand,
-      model: model,
-      carImage: {
-        img1: img1,
-        img2: img2,
+      reservationDetails: {
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        price: price, //per day
       },
-      carDescription: carDescription,
-      numberOfDoor: numberOfDoor,
-      numberOfSeat: numberOfSeat,
-      power: power, //gas or electric
-      available: available,
-    },
-    reservationDetails: {
-      startDate: formattedStartDate,
-      endDate: formattedEndDate,
-      price: price, //per day
-    },
-  };
-
-  /* Date Picker function for selection */
-  const handleDatePicker = (ranges) => {
-    setStartDate(ranges.selection.startDate);
-    setEndDate(ranges.selection.endDate);
-  };
-
-  /* Save to Database if everything is okay*/
-  function handleNewListing(event) {
-    event.preventDefault();
-    db.collection("cars")
-      .add(newListing)
-      .then(() => {
-        //...
-        router.push("/auth/UserDashboard"); //redirect to the dashboard
-      })
-      .catch((error) => {
-        setError(error);
-        console.log(error);
-      });
+    });
+    await batch.commit();
   }
 
   return (
@@ -183,11 +245,15 @@ function ListCar() {
           className="text-center mt-2 text-4xl text-blue-400 font-display font-semibold xl:text-4xl
                     xl:text-bold"
         >
-          List Your Car
+          Update Your Car
         </h2>
-
         <div className="m-3 sm:m-0 mt-2 flex justify-center ">
-          <form onSubmit={handleNewListing}>
+          <form
+            onSubmit={() => {
+              handleUpdate();
+              router.push("/auth/UserDashboard");
+            }}
+          >
             <div className="mt-4">
               <div className="flex flex-col">
                 <div className="lg:text-md text-left font-bold text-gray-700 tracking-wide">
@@ -419,6 +485,9 @@ function ListCar() {
                 <div className="lg:text-md font-bold text-gray-700 tracking-wide">
                   Car availability
                 </div>
+                <div className="text-md text-gray-500 text-left ">
+                  {"from " + rentedFrom + " to " + rentedTo}
+                </div>
               </div>
               <DateRangePicker
                 showDateDisplay={false}
@@ -437,7 +506,7 @@ function ListCar() {
                                 font-semibold font-display focus:outline-none focus:shadow-outline
                                 hover:bg-blue-500 shadow-lg"
               >
-                Add new car
+                Update the car
               </button>
             </div>
           </form>
@@ -446,4 +515,4 @@ function ListCar() {
     </>
   );
 }
-export default PrivateRoute(ListCar);
+export default PrivateRoute(UpdateCar);

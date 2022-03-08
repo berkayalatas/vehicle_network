@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/dist/client/router";
 import emailjs from "emailjs-com";
 import Image from "next/image";
+import contactImg from '../public/images/contact.png';
 
 function contact() {
   const router = useRouter();
@@ -162,7 +163,7 @@ function contact() {
         <div className="hidden lg:flex items-center justify-center bg-blue-100 flex-1 h-screen">
           <div className="max-w-xs transform duration-200 hover:scale-110 cursor-pointer">
             <Image
-              src="https://cdn-icons.flaticon.com/png/512/3188/premium/3188213.png?token=exp=1646244830~hmac=466808d64f1958c2cf62989722db1f57"
+              src={contactImg}
               width={400}
               height={400}
               alt="Contact Image"

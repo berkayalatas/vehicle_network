@@ -4,6 +4,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import Nav from "../../components/navbar/Nav";
 import Link from "next/link";
 import Image from "next/image";
+import loginImg from '../../public/images/login.png'
 
 function LoginPage() {
   const router = useRouter();
@@ -53,12 +54,12 @@ function LoginPage() {
             <div role="alert">
               <div className="flex justify-center align-middle m-2">
                 <div className="w-2/3 ">
-                  <div className="bg-blue-500 text-white font-bold rounded-t px-4 py-2">
+                  <div className="bg-red-500 text-white font-bold rounded-t px-4 py-2">
                     Error
                   </div>
                   <div
-                    className="border border-t-0 border-blue-400 rounded-b 
-                bg-blue-100 px-4 py-3 text-blue-700 "
+                    className="border border-t-0 border-red-400 rounded-b 
+                bg-red-100 px-4 py-3 text-red-700 "
                   >
                     <p>{loginErrMsg.slice(22, -2)}</p>
                   </div>
@@ -135,7 +136,7 @@ function LoginPage() {
         <div className="hidden lg:flex items-center justify-center bg-blue-100 flex-1 h-screen">
           <div className="max-w-xs transform duration-200 hover:scale-110 cursor-pointer">
             <Image
-              src="https://cdn-icons.flaticon.com/png/512/1674/premium/1674653.png?token=exp=1646241121~hmac=180b8408797dc0ec6339c7c2d58cf142"
+              src={loginImg}
               width={400}
               height={400}
               alt="Login Image"

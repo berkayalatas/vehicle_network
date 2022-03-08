@@ -5,6 +5,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import Nav from "../../components/navbar/Nav";
 import Link from "next/link";
 import Image from "next/image";
+import update from "../../public/images/update.png";
 
 function UpdateProfile() {
   const router = useRouter();
@@ -70,12 +71,12 @@ function UpdateProfile() {
             <div role="alert">
               <div className="flex justify-center align-middle m-2">
                 <div className="w-2/3 ">
-                  <div className="bg-blue-500 text-white font-bold rounded-t px-4 py-2">
+                  <div className="bg-red-500 text-white font-bold rounded-t px-4 py-2">
                     Error
                   </div>
                   <div
-                    className="border border-t-0 border-blue-400 rounded-b 
-                bg-blue-100 px-4 py-3 text-blue-700 "
+                    className="border border-t-0 border-red-400 rounded-b 
+                bg-red-100 px-4 py-3 text-red-700 "
                   >
                     <p>{error || updateUsernameErrMsg}</p>
                   </div>
@@ -171,12 +172,7 @@ function UpdateProfile() {
         </div>
         <div className="hidden lg:flex items-center justify-center bg-blue-100 flex-1 h-screen">
           <div className="max-w-xs transform duration-200 hover:scale-110 cursor-pointer">
-            <Image
-              src="https://cdn-icons.flaticon.com/png/512/4391/premium/4391470.png?token=exp=1646247632~hmac=9e9d95a3e8874357cee83ca8108a91e5"
-              width={400}
-              height={400}
-              alt="Login Image"
-            />
+            <Image src={update} width={400} height={400} alt="Update Image" />
           </div>
         </div>
       </div>

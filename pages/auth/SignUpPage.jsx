@@ -3,6 +3,7 @@ import { useRouter } from "next/dist/client/router";
 import { useAuth } from "../../contexts/AuthContext";
 import Nav from "../../components/navbar/Nav";
 import Image from "next/image";
+import signupImg from "../../public/images/signup.png";
 
 function SignUpPage() {
   const router = useRouter();
@@ -57,12 +58,12 @@ function SignUpPage() {
             <div role="alert">
               <div className="flex justify-center align-middle m-2">
                 <div className="w-2/3 ">
-                  <div className="bg-blue-500 text-white font-bold rounded-t px-4 py-2">
+                  <div className="bg-red-500 text-white font-bold rounded-t px-4 py-2">
                     Error
                   </div>
                   <div
-                    className="border border-t-0 border-blue-400 rounded-b 
-                bg-blue-100 px-4 py-3 text-blue-700 "
+                    className="border border-t-0 border-red-400 rounded-b 
+                bg-red-100 px-4 py-3 text-red-700 "
                   >
                     <p>{error || signUpErrMsg.slice(22, -2)}</p>
                   </div>
@@ -156,12 +157,7 @@ function SignUpPage() {
         </div>
         <div className="hidden lg:flex items-center justify-center bg-blue-100 flex-1 h-screen">
           <div className="max-w-xs transform duration-200 hover:scale-110 cursor-pointer">
-            <Image
-              src="https://cdn-icons.flaticon.com/png/512/2247/premium/2247728.png?token=exp=1646241466~hmac=a4a60d896799ebe3ed885500c8b7d9fc"
-              width={400}
-              height={400}
-              alt="Login Image"
-            />
+            <Image src={signupImg} width={400} height={400} alt="Signup" />
           </div>
         </div>
       </div>
