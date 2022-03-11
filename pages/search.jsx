@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Nav from "../components/navbar/Nav";
 import Footer from "../components/footer/Footer";
 import { useRouter } from "next/dist/client/router";
-import HotelCard from "../components/hotelCard/HotelCard";
-import Map from "../components/map/Map";
 
 function Search() {
   const router = useRouter();
