@@ -7,6 +7,8 @@ import Nav from "../../components/navbar/Nav";
 import Image from "next/image";
 import { db } from "../../firebase_config";
 import { CalendarIcon, UserGroupIcon } from "@heroicons/react/outline";
+import upcoming from '../../public/images/calendar.png'
+import previous from '../../public/images/previous.png'
 
 function UserDashboard() {
   const router = useRouter();
@@ -302,16 +304,17 @@ function UserDashboard() {
                 ))
               ) : (
                 <div className=" flex flex-col justify-center align-middle text-center my-2">
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/712/712058.png"
-                    style={{ width: 220, height: 200 }}
+                  <Image
+                    src={upcoming}
+                    width={180}
+                    height={280}
                     alt="No Data"
                   />
                   <div
                     className="text-center font-semibold text-xl my-3 text-gray-600 font-display xl:text-2xl
                       xl:text-bold "
                   >
-                    No Upcoming rental data
+                    No upcoming rental data
                   </div>
                   <div>
                     <button
@@ -412,9 +415,9 @@ function UserDashboard() {
               ) : (
                 <div className=" flex flex-col justify-center align-middle text-center my-2">
                   <Image
-                    src="https://cdn-icons.flaticon.com/png/512/4747/premium/4747902.png?token=exp=1646253471~hmac=e8dc90e6f0df1f59372bcb25a99f4e1c"
-                    width={220}
-                    height={200}
+                    src={previous}
+                    width={200}
+                    height={300}
                     alt="No Data"
                   />
                   <div

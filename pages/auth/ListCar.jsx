@@ -46,10 +46,8 @@ function ListCar() {
     key: "selection",
   };
 
-  /* Format Dates */
-  const formattedStartDate = format(new Date(startDate), "dd-MM-yyyy");
-  const formattedEndDate = format(new Date(endDate), "dd-MM-yyyy");
-
+  console.log(startDate, endDate)
+ 
   /* Map related states */
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -148,8 +146,8 @@ function ListCar() {
       available: available,
     },
     reservationDetails: {
-      startDate: formattedStartDate,
-      endDate: formattedEndDate,
+      startDate: startDate.getTime() / 1000, //Store the date as a unix timestamp (in milliseconds) using
+      endDate: endDate.getTime() / 1000, //Store the date as a unix timestamp (in milliseconds) using
       price: price, //per day
     },
   };

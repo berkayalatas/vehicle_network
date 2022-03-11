@@ -3,8 +3,7 @@ import PrivateRoute from "../PrivateRoute";
 import Nav from "../../components/navbar/Nav";
 import { useRouter } from "next/dist/client/router";
 import { useAuth } from "../../contexts/AuthContext";
-import { db, getFirestore } from "../../firebase_config";
-import { format } from "date-fns";
+import { db } from "../../firebase_config";
 import "react-date-range/dist/styles.css"; // main style file for date picker
 import "react-date-range/dist/theme/default.css"; // theme css file date picker
 import { DateRangePicker } from "react-date-range";
@@ -15,7 +14,6 @@ import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
   writeBatch,
   doc,
-  getDoc,
   getDocs,
   collection,
   query,
@@ -49,30 +47,12 @@ function UpdateCar() {
   const [available, setAvailable] = useState(true);
 
   /* Reservation Details */
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
   const [price, setPrice] = useState("");
   const [rentedFrom, setRentedFrom] = useState("");
   const [rentedTo, setRentedTo] = useState("");
 
   /*get carID from URL */
   const { carID } = router.query;
-
-  /* Date Range*/
-  const dateRange = {
-    startDate: startDate,
-    endDate: endDate,
-    key: "selection",
-  };
-  /* Format Dates */
-  const formattedStartDate = format(new Date(startDate), "dd-MM-yyyy");
-  const formattedEndDate = format(new Date(endDate), "dd-MM-yyyy");
-
-  /* Date Picker function for selection */
-  const handleDatePicker = (ranges) => {
-    setStartDate(ranges.selection.startDate);
-    setEndDate(ranges.selection.endDate);
-  };
 
   /* Map states */
   const mapContainer = useRef(null);
@@ -139,14 +119,59 @@ function UpdateCar() {
       });
   }, [car]);
 
-  //   setTimeout(() => {
-  //     car
-  //       ?.filter((c) => c.car["carID"] == carID)
-  //       .map((c) => {
-  //         setLng(c?.car["location"]["lng"]);
-  //         setLat(c?.car["location"]["lat"]);
-  //       });
-  //   });
+  /* Conver timestamp to Data input format */
+  const timeStamptoDate = (timestamp) => {
+    var date = new Date(timestamp * 1000);
+    return date;
+  };
+
+  /* Date Range DEFAULT: Previous selection */
+  const dateRange = {
+    startDate: timeStamptoDate(rentedFrom),
+    endDate: timeStamptoDate(rentedTo),
+    key: "selection",
+  };
+
+  /* using timestamp generate a car id */
+  function toTimestamp(strDate) {
+    var datum = Date.parse(strDate);
+    return datum / 1000;
+  }
+
+  /* Handle Date Selection */
+  const handleDatePicker = (ranges) => {
+    setRentedFrom(toTimestamp(ranges.selection.startDate));
+    setRentedTo(toTimestamp(ranges.selection.endDate));
+  };
+
+  // /* We're refreshing thepage so User will be able see the updated values */
+  // function refreshPage(trueOrFalse) {
+  //   window.location.reload(trueOrFalse);
+  // }
+
+  /* Timestamp to human readable date converter */
+  function timeConverter(UNIX_timestamp) {
+    var a = new Date(UNIX_timestamp * 1000);
+    var months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var time = date + " " + month + " " + year + " ";
+    return time;
+  }
 
   /* Mapbox geolocation and find user location, define marker here */
   useEffect(() => {
@@ -190,20 +215,22 @@ function UpdateCar() {
 
   async function handleUpdate() {
     //!TODO this function may include a bug
-    const q = query(collection(db, "cars"), where("user.userID", "==", user.uid));
+    const q = query(
+      collection(db, "cars"),
+      where("user.userID", "==", user.uid)
+    );
     var docID;
     //console.log(carID,q)
     const querySnapshot = await getDocs(q);
-    console.log(carId)
+    console.log(carId);
 
     querySnapshot.forEach((doc) => {
       console.log(doc.id);
-      const myData = doc.data()
-      if(myData['car']['carID'] == carId){
+      const myData = doc.data();
+      if (myData["car"]["carID"] == carId) {
         docID = doc.id;
       }
       console.log("Document data:", doc.data());
-      
     });
 
     const batch = writeBatch(db);
@@ -229,8 +256,8 @@ function UpdateCar() {
         available: available,
       },
       reservationDetails: {
-        startDate: formattedStartDate,
-        endDate: formattedEndDate,
+        startDate: rentedFrom, 
+        endDate: rentedTo, 
         price: price, //per day
       },
     });
@@ -251,7 +278,7 @@ function UpdateCar() {
           <form
             onSubmit={() => {
               handleUpdate();
-              router.push("/auth/UserDashboard");
+              router.push("/auth/MyCar");             
             }}
           >
             <div className="mt-4">
@@ -285,6 +312,9 @@ function UpdateCar() {
                 <div className="m-2 font-bold text-left text-gray-700 lg:text-md tracking-wide">
                   Find your car location{" "}
                   <div className="text-sm text-gray-500 text-left ">
+                    If you don't want to change you car location skip this
+                    field. Otherwise,
+                    <br />
                     Search your city or locate yourself using the find my
                     location button. <br />
                     Click on the map to indicate your car location.
@@ -486,13 +516,15 @@ function UpdateCar() {
                   Car availability
                 </div>
                 <div className="text-md text-gray-500 text-left ">
-                  {"from " + rentedFrom + " to " + rentedTo}
+                  {"from " +
+                    timeConverter(rentedFrom) +
+                    " to " +
+                    timeConverter(rentedTo)}
                 </div>
               </div>
               <DateRangePicker
                 showDateDisplay={false}
                 ranges={[dateRange]}
-                minDate={new Date()}
                 rangeColors={["#3f97f2"]}
                 onChange={handleDatePicker}
               />

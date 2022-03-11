@@ -50,6 +50,30 @@ function MyCar() {
     fetchData();
   }, []);
 
+  function timeConverter(UNIX_timestamp) {
+    var a = new Date(UNIX_timestamp * 1000);
+    var months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var time =
+      date + " " + month + " " + year + " " 
+    return time;
+  }
+
   // console.log(cars);
 
   return (
@@ -200,8 +224,8 @@ function MyCar() {
                               <CalendarIcon className="h-6 w-6 m-2" />
                             </div>
                             <div className="mt-2 text-left text-md font-semibold pb-1 lg:text-lg">
-                              from {car?.reservationDetails["startDate"]} to{" "}
-                              {car?.reservationDetails["endDate"]}
+                              from {timeConverter(car?.reservationDetails["startDate"]) } to{" "}
+                              {timeConverter(car?.reservationDetails["endDate"])}
                             </div>
                           </div>
                         </div>
@@ -238,7 +262,12 @@ function MyCar() {
                           >
                             Delete Car
                           </button>
-                          {open && <DeleteModal setOpen={setOpen} carID={car?.car["carID"]} />}
+                          {open && (
+                            <DeleteModal
+                              setOpen={setOpen}
+                              carID={car?.car["carID"]}
+                            />
+                          )}
                         </div>
                       </div>
                     </div>
@@ -247,12 +276,7 @@ function MyCar() {
               ))
             ) : (
               <div className=" flex flex-col justify-center align-middle text-center my-2">
-                <Image
-                  src={notfound}
-                  width={200}
-                  height={250}
-                  alt="No Data"
-                />
+                <Image src={notfound} width={200} height={250} alt="No Data" />
                 <div
                   className="text-center font-semibold text-xl my-3 text-gray-600 font-display lg:text-2xl
                       lg:text-bold "
