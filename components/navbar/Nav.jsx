@@ -51,12 +51,9 @@ function Nav() {
     if (searchInput.length > 2 && searchInput.charAt(0) != " ") {
       if (startDate && endDate >= new Date()) {
         if (
-          searchInput.toLowerCase() === "london" ||
           searchInput.toLowerCase() === "berlin" ||
           searchInput.toLowerCase() === "vienna" ||
-          searchInput.toLowerCase() === "paris" ||
-          searchInput.toLowerCase() === "rome" ||
-          searchInput.toLowerCase() === "amsterdam"
+          searchInput.toLowerCase() === "paris"
         ) {
           router.push({
             pathname: "/search",

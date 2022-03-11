@@ -176,14 +176,14 @@ function UpdateCar() {
   /* Mapbox geolocation and find user location, define marker here */
   useEffect(() => {
     if (map.current) return; // initialize map only once
-
+ 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/berkayalatas/cl082a0ql001r14p4m2jypcqr",
       center: [lng, lat],
       zoom: zoom,
     });
-
+ 
     let geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       marker: {
@@ -192,6 +192,7 @@ function UpdateCar() {
       mapboxgl: mapboxgl,
     });
     map.current.addControl(geocoder);
+
     map.current.addControl(
       new mapboxgl.GeolocateControl({
         positionOptions: {
@@ -256,8 +257,8 @@ function UpdateCar() {
         available: available,
       },
       reservationDetails: {
-        startDate: rentedFrom, 
-        endDate: rentedTo, 
+        startDate: rentedFrom,
+        endDate: rentedTo,
         price: price, //per day
       },
     });
@@ -278,7 +279,7 @@ function UpdateCar() {
           <form
             onSubmit={() => {
               handleUpdate();
-              router.push("/auth/MyCar");             
+              router.push("/auth/MyCar");
             }}
           >
             <div className="mt-4">

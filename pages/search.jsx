@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Header from "../components/header/Header";
+import Nav from "../components/navbar/Nav";
 import Footer from "../components/footer/Footer";
 import { useRouter } from "next/dist/client/router";
-import { format } from "date-fns";
 import HotelCard from "../components/hotelCard/HotelCard";
 import Map from "../components/map/Map";
 
-function Search({ searchResults }) {
+function Search() {
   const router = useRouter();
 
   //ES6 Destructing
@@ -72,7 +71,7 @@ function Search({ searchResults }) {
 
   return (
     <div>
-      <Header
+      <Nav
         placeholder={`${location.charAt(0).toUpperCase() + location.slice(1)} `}
       />
       <main className="flex flex-col xl:flex-row justify-center align-items-center gap-2  xl:min-h-[100vh]">
@@ -96,7 +95,7 @@ function Search({ searchResults }) {
             </button>
           </div>
           <div className="flex flex-col">
-            {filteredData.map(
+            {/* {filteredData.map(
               (
                 { img, location, title, description, star, price, roomID },
                 key
@@ -116,16 +115,16 @@ function Search({ searchResults }) {
                   roomID={roomID}
                 />
               )
-            )}
+            )} */}
           </div>
         </section>
         <section className="flex flex-wrap justify-center xl:min-w-[600px]">
-          <Map
+          {/* <Map
             searchResults={searchResults[indexNumber]}
             startDate={startDate}
             endDate={endDate}
             numberOfGuest={numberOfGuest}
-          />
+          /> */}
         </section>
       </main>
       <Footer />
@@ -134,22 +133,4 @@ function Search({ searchResults }) {
 }
 
 export default Search;
-//https://jsonkeeper.com/b/W7T1 //london
-//https://jsonkeeper.com/b/8VNV //berlin
-//https://jsonkeeper.com/b/9SPF //vienna
-//https://jsonkeeper.com/b/DAC0 //paris
-//https://jsonkeeper.com/b/XSDC //rome
-//https://jsonkeeper.com/b/R9UK //amsterdam
-//https://jsonkeeper.com/b/1Y8L //city urls
-
-export async function getServerSideProps() {
-  const searchResults = await fetch("https://jsonkeeper.com/b/1Y8L").then(
-    (response) => response.json()
-  );
-
-  return {
-    props: {
-      searchResults,
-    },
-  };
-}
+ 
