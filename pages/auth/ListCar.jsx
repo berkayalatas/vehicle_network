@@ -4,7 +4,6 @@ import Nav from "../../components/navbar/Nav";
 import { useRouter } from "next/dist/client/router";
 import { useAuth } from "../../contexts/AuthContext";
 import { db } from "../../firebase_config";
-import { format } from "date-fns";
 import "react-date-range/dist/styles.css"; // main style file for date picker
 import "react-date-range/dist/theme/default.css"; // theme css file date picker
 import { DateRangePicker } from "react-date-range";
@@ -45,8 +44,6 @@ function ListCar() {
     endDate: endDate,
     key: "selection",
   };
-
-  console.log(startDate, endDate)
  
   /* Map related states */
   const mapContainer = useRef(null);

@@ -7,7 +7,7 @@
     transform: translate(-50%, -50%);
     position: fixed;
     overflow-x: hidden;
-    background-color:rgba(0, 0, 0, 0.144)
+    background-color: rgba(0, 0, 0, 0.144)
 }
 
 .centered {
@@ -22,10 +22,9 @@
     height: 250px;
     background: rgb(255, 255, 255);
     color: white;
-    z-index: 10;
+    z-index: 100;
     border-radius: 12px;
     box-shadow: 0px 0px 10px 0 rgba(0, 0, 0, 0.04);
-
 }
 
 .modalHeader {
@@ -89,7 +88,7 @@
     transition: all 0.25s ease;
 }
 
-.deleteBtn:hover{
+.deleteBtn:hover {
     box-shadow: 0 10px 20px -10px rgba(255, 62, 78, 0.6);
     background-color: rgb(221, 67, 46);
 }
@@ -105,7 +104,6 @@
     width: 180px;
     color: #fff;
     background: rgb(74, 75, 76);
-    ;
     transition: all 0.25s ease;
     font-family: 'Open Sans', sans-serif;
 }
@@ -114,4 +112,80 @@
     box-shadow: 0 10px 20px -10px rgba(29, 28, 28, 0.6);
     transform: none;
     background: rgb(45, 45, 46);
+}
+
+
+/*  WARNING MODAL */
+.modalTitle {
+    font-family: 'poppins', sans-serif;
+    color: rgb(199, 19, 19);
+    margin: 10px;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.contentOfModal {
+    padding: 5px;
+    margin-top: 25px;
+    font-size: 18px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(74, 75, 76);
+    font-weight: 600;
+    font-family: 'poppins', sans-serif;
+}
+
+.okayBtn {
+    margin: 12px 0;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 12px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    border: none;
+    width: 150px;
+    color: #fff;
+    background: #3f97f2;
+    transition: all 0.25s ease;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.okayBtn:hover {
+    box-shadow: 0 10px 20px -10px rgba(29, 28, 28, 0.6);
+    transform: none;
+    background: #3182d8;
+}
+
+.headerModal {
+    height: 50px;
+    background: rgb(255, 255, 255);
+    overflow: hidden;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.headerArea{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.warningModal{
+    width: 320px;
+    height: 230px;
+    background: rgb(255, 255, 255);
+    z-index: 10;
+    border-radius: 12px;
+    box-shadow: 0px 0px 10px 0 rgba(0, 0, 0, 0.04); 
+}
+
+.btnContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }

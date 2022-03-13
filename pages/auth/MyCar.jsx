@@ -12,17 +12,16 @@ import notfound from "../../public/images/notfound.png";
 import DeleteModal from "../../components/modals/DeleteModal";
 
 function MyCar() {
-  const [error, setError] = useState("");
   const { user } = useAuth();
   const router = useRouter();
+
+  const [error, setError] = useState("");
   const [cars, setCars] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   /* Receive car data if user has a car in the database */
   useEffect(() => {
     const fetchData = () => {
-      setLoading(true);
       const myCars = db.collection("cars");
       myCars
         .get()
@@ -30,7 +29,6 @@ function MyCar() {
           if (data.size === 0) {
             console.log("Cars not found.");
           }
-          setLoading(false);
           const cars = data.docs.map((doc) => {
             return { id: doc.id, ...doc.data() };
           });
@@ -45,6 +43,7 @@ function MyCar() {
         })
         .catch((error) => {
           console.error("Failed to bring car", error);
+          setError(error);
         });
     };
     fetchData();
@@ -69,8 +68,7 @@ function MyCar() {
     var year = a.getFullYear();
     var month = months[a.getMonth()];
     var date = a.getDate();
-    var time =
-      date + " " + month + " " + year + " " 
+    var time = date + " " + month + " " + year + " ";
     return time;
   }
 
@@ -170,6 +168,7 @@ function MyCar() {
                     <img
                       src={car?.car["carImage"]["img1"]}
                       alt="image"
+                      style={{ zIndex: -1 }}
                       className="w-full transform duration-200 hover:scale-110"
                     />
                     <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
@@ -224,8 +223,14 @@ function MyCar() {
                               <CalendarIcon className="h-6 w-6 m-2" />
                             </div>
                             <div className="mt-2 text-left text-md font-semibold pb-1 lg:text-lg">
-                              from {timeConverter(car?.reservationDetails["startDate"]) } to{" "}
-                              {timeConverter(car?.reservationDetails["endDate"])}
+                              from{" "}
+                              {timeConverter(
+                                car?.reservationDetails["startDate"]
+                              )}{" "}
+                              to{" "}
+                              {timeConverter(
+                                car?.reservationDetails["endDate"]
+                              )}
                             </div>
                           </div>
                         </div>
