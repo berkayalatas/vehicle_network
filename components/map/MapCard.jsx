@@ -2,19 +2,9 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/dist/client/router";
 
-function MapCard({
-  id,
-  img,
-  location,
-  title,
-  description,
-  price,
-  startDate,
-  endDate,
-  numberOfGuest,
-  roomID,
-}) {
+function MapCard({ carImg, description, model, brand, price }) {
   const router = useRouter();
+
   return (
     <div
       className="bg-white rounded shadow-md flex card text-gray-900"
@@ -23,7 +13,7 @@ function MapCard({
       <div className="relative w-full">
         <Image
           className="rounded-md"
-          src={img}
+          src={carImg}
           layout="fill"
           alt="Room Image"
           objectFit="fill"
@@ -33,43 +23,41 @@ function MapCard({
 
       <div className="w-full flex flex-col">
         <div className="pl-2 pb-0 flex-1">
-          <h3 className="font-light mb-1 text-grey-darkest">{title}</h3>
-          <div className="text-xs flex items-center mb-2">
-            <i className="fas fa-map-marker-alt mr-1 text-grey-dark"></i>
-            {location}
+          <div className="text-lg font-bold text-gray-700  flex items-center mb-2">
+            {brand + " " + model}
           </div>
-          <span className="text-xl text-grey-darkest">{price}</span>
-          <div className="flex items-center mt-2">
-            <div className="pr-2 text-xs">
-              <i className="fas fa-wifi text-green"></i> {description}
+          <p className="text-md font-mono text-gray-700 ">
+            <span className="text-lg font-mono font-semibold text-grey-darkest">
+              {price}
+            </span>{" "}
+            € / day
+          </p>
+          <div className="flex align-middle justify-center items-center mt-2">
+            <div className="pr-2 text-xs text-gray-700 ">
+              {description.length > 200
+                ? description.substring(0, 200).concat("...")
+                : description}
             </div>
-            {/* <div className="px-2 text-xs">
-              <i className="text-grey-darker far fa-building"></i> 2mins to
-              center
-            </div> */}
           </div>
         </div>
         <div
           style={{ transition: "all .2s ease-out" }}
-          className="bg-grey-lighter p-3 flex items-center justify-between transition hover:bg-grey-light"
+          className="p-3 flex items-center justify-between"
         >
           <button
-            className="rounded-lg px-2 py-1 bg-red-400 text-white hover:bg-red-500 duration-300"
+            className="rounded-lg px-2 py-1 bg-blue-400 text-white hover:bg-blue-500 duration-300"
             onClick={() => {
               router.push({
-                pathname: "/checkOut",
-                query: {
-                  id: id,
-                  location: location,
-                  startDate: startDate,
-                  endDate: endDate,
-                  numberOfGuest: numberOfGuest,
-                  roomID: roomID,
-                },
+                pathname: "/carDetails",
+                // query: {
+                //   location: location,
+                //   startDate: startDate,
+                //   endDate: endDate,
+                // },
               });
             }}
           >
-            Book Now
+            Rent Now
           </button>
         </div>
       </div>

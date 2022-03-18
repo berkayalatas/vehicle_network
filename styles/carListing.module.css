@@ -16,6 +16,11 @@
     }
 }
 
+.map{
+    height: 100%;
+    width: 100%;
+}
+
 .sidebar {
     background-color: rgba(46, 58, 70, 0.9);
     color: #fff;

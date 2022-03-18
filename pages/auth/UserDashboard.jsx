@@ -1,27 +1,25 @@
 import { useAuth } from "../../contexts/AuthContext";
 import PrivateRoute from "../PrivateRoute";
-import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
 import Nav from "../../components/navbar/Nav";
 import Image from "next/image";
 import { db } from "../../firebase_config";
 import { CalendarIcon, UserGroupIcon } from "@heroicons/react/outline";
-import upcoming from '../../public/images/calendar.png'
-import previous from '../../public/images/previous.png'
+import upcoming from "../../public/images/calendar.png";
+import previous from "../../public/images/previous.png";
+import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
+import UpdateUser from "../../components/updateUser/UpdateUser";
 
 function UserDashboard() {
   const router = useRouter();
-  const { currentUser, logout, user } = useAuth();
+  const { user } = useAuth();
   /* States */
-  const [error, setError] = useState("");
   const [room, setRoom] = useState([]);
-  const [loading, setLoading] = useState(false);
-
+ 
   /* Fetch Data from database */
   useEffect(() => {
     const getInfo = () => {
-      setLoading(true);
       const bookedRoom = db.collection("booking");
       bookedRoom
         .get()
@@ -29,7 +27,6 @@ function UserDashboard() {
           if (data.size === 0) {
             console.log("No Result");
           }
-          setLoading(false);
           const room = data.docs.map((doc) => {
             return { id: doc.id, ...doc.data() };
           });
@@ -84,154 +81,17 @@ function UserDashboard() {
         </h2>
       </div>
 
-      <div className="flex align-middle justify-center text-center mt-5">
-        <nav
-          className="bg-blue-50 text-gray-700 border border-blue-200 py-3 px-5 rounded-lg"
-          aria-label="Breadcrumb"
-        >
-          <ol className="inline-flex items-center space-x-1 md:space-x-3">
-            <li className="inline-flex items-center">
-              <Link href="/">
-                <div className="flex cursor-pointer">
-                  <svg
-                    className="w-5 h-5 mr-2.5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
-                  </svg>
-                  <span>Home</span>
-                </div>
-              </Link>
-            </li>
-            <li>
-              <div className="flex items-center">
-                <svg
-                  className="w-6 h-6 text-blue-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                <Link
-                  href="/auth/ListCar"
-                  className="text-blue-700 hover:text-blue-900 ml-1 md:ml-2 text-sm font-medium"
-                >
-                  List your car
-                </Link>
-              </div>
-            </li>
-            <li>
-              <div className="flex items-center">
-                <svg
-                  className="w-6 h-6 text-blue-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-                <Link
-                  href="/auth/MyCar"
-                  className="text-blue-700 hover:text-blue-900 ml-1 md:ml-2 text-sm font-medium"
-                >
-                  My car
-                </Link>
-              </div>
-            </li>
-          </ol>
-        </nav>
-      </div>
+      <Breadcrumb
+        title1={"List new car"}
+        href1={"/auth/ListCar"}
+        title2={"My Cars"}
+        href2={"/auth/MyCar"}
+        title3={"Liked Cars"}
+        href3={"/auth/LikedCars"}
+      />
 
       <div className="flex flex-col justify-center mt-4">
-        <div className="m-2 p-2 align-middle text-center">
-          <h3
-            className="text-center font-semibold text-xl mt-2 text-gray-700 font-display xl:text-2xl
-                    xl:text-bold"
-          >
-            Welcome {currentUser.displayName || currentUser.email}{" "}
-          </h3>
-        </div>
-
-        <div className="mt-7 flex flex-col justify-center items-center ">
-          <div className=" flex flex-col sm:flex-row ">
-            <div className="flex flex-col sm:mr-4">
-              <div className="text-md sm:text-lg font-bold text-gray-600 tracking-wide">
-                Username
-              </div>
-              <div className="flex flex-row">
-                <div className="text-md mt-2 font-semibold text-gray-500">
-                  {currentUser.displayName || "Please add a username"}{" "}
-                </div>
-                <div className="ml-3 cursor-pointer">
-                  <Link href="/auth/UpdateProfile">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-7 w-7"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="#e78514"
-                      strokeWidth="2.5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                      />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col mt-6 sm:mt-0 sm:ml-4">
-              <div className="text-md sm:text-lg font-bold text-gray-600 tracking-wide sm:text-center">
-                Email Address
-              </div>
-              <div className="flex flex-row text-center">
-                <div className="text-md mt-2 font-semibold text-gray-500">
-                  {currentUser.email}{" "}
-                </div>
-                <div className="ml-3 cursor-pointer">
-                  <Link href="/auth/UpdateProfile">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-7 w-7"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="#e78514"
-                      strokeWidth="2.5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                      />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col mt-3">
-            <div className="mt-6 flex justify-center pb-5 text-sm font-display font-semibold text-gray-700 text-center">
-              Do you want to update your profile ?{" "}
-              <div className="cursor-pointer ml-3 text-blue-400 hover:text-blue-500">
-                <Link href="/auth/UpdateProfile">Update</Link>
-              </div>
-            </div>
-          </div>
-        </div>
+        <UpdateUser />
 
         <div className="mt-2 flex justify-evenly flex-col md:flex-row mb-5">
           <div className="mt-10 flex flex-col justify-start">

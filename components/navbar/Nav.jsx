@@ -14,7 +14,7 @@ import Menu from "./Menu";
 function Nav({ placeholder }) {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [guessNumber, setGuessNumber] = useState(1);
+  const [personNumber, setPersonNumber] = useState(1);
 
   const [open, setOpen] = useState(false);
   const [warningContent, setWarningContent] = useState("");
@@ -55,7 +55,6 @@ function Nav({ placeholder }) {
                 location: searchInput,
                 startDate: startDate.toISOString(),
                 endDate: endDate.toISOString(),
-                guessNumber: guessNumber,
               },
             });
           } else {
@@ -144,11 +143,11 @@ function Nav({ placeholder }) {
               </h2>
               <UsersIcon className="h-5 text-gray-800" />
               <input
-                value={guessNumber}
-                onChange={(e) => setGuessNumber(e.target.value)}
+                value={personNumber}
+                onChange={(e) => setPersonNumber(e.target.value)}
                 type="number"
                 min={1}
-                max={10}
+                max={3}
                 className="w-12 pl-2 text-lg outline-none text-blue-500"
               />
             </div>

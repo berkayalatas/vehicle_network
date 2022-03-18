@@ -6,13 +6,44 @@ import { useAuth } from "../contexts/AuthContext";
 import { db } from "../firebase_config";
 import Error from "../components/errors/Error";
 import CarCards from "../components/car_cards/CarCards";
+import { format } from "date-fns";
+import Map from "../components/map/Map";
 
 function Search() {
   const router = useRouter();
   const { user } = useAuth();
-  const { location, startDate, endDate, numberOfGuest } = router.query;
+  const { location, startDate, endDate } = router.query;
   const [cars, setCars] = useState([]);
   const [error, setError] = useState("");
+
+
+  function timeConverter(UNIX_timestamp) {
+    var a = new Date(UNIX_timestamp * 1000);
+    var months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var time = date + " " + month + " " + year;
+    return time;
+  }
+  console.log(Date.parse(startDate))
+  const formattedStartDate = timeConverter(Date.parse(startDate));
+  const formattedEndDate = timeConverter(Date.parse(endDate));
+  const range = `from ${formattedStartDate} - to ${formattedEndDate}`;
+
 
   // FETCH DATA ACCORDING TO SEARCH INPUT
   useEffect(() => {
@@ -42,6 +73,7 @@ function Search() {
           setError("Failed to bring cars");
         });
     };
+
     fetchCarData();
   }, []);
 
@@ -71,37 +103,30 @@ function Search() {
       ) : (
         <main className="flex flex-col xl:flex-row justify-center align-items-center gap-2 xl:min-h-[100vh]">
           <section className="flex-col xl:overflow-y-scroll xl:max-h-[100vh]">
-            <p className="text-md m-3 pl-2 text-gray-900">
-              {/* {location.charAt(0).toUpperCase() + location.slice(1)}, {range},
-            Stays for {numberOfGuest} {numberOfGuest > 1 ? "Guests" : "Guest"} */}
-            </p>
-            <h1 className="text-3xl font-semibold mt-2 mb-6 md:pl-5">
-              {/* Stays in {location.charAt(0).toUpperCase() + location.slice(1)} */}
+            <h1 className="text-2xl md:text-3xl font-semibold mt-2 mb-6 md:pl-5">
+              Cars in {location.charAt(0).toUpperCase() + location.slice(1)}
             </h1>
+            <p className="text-md md:text-lg font-semibold m-3 pl-2 pb-2 text-gray-900 ">
+              {location.charAt(0).toUpperCase() + location.slice(1)}, {range}
+            </p>
             <div
               className="flex pl-2 mb-5 space-x-3 
           text-gray-700 whitespace-nowrap justify-evenly "
             >
-              <button className="button">Room Price</button>
-              <button className="button">Rooms Star</button>
+              {/* TODO: Add filters here */}
+              <button className="button">Car Price</button>
+              {/* <button className="button">Rooms Star</button> */}
             </div>
             <div className="flex flex-col">
-              <div> Car cards </div>
-              {/* {cars?.map((car, key) => (
+              {cars?.map((car, key) => (
                 <div key={key}>
-                  <CarCards />
+                  <CarCards carData={car} />
                 </div>
-              ))} */}
+              ))}
             </div>
           </section>
           <section className="flex flex-wrap justify-center xl:min-w-[600px]">
-            <div> map </div>
-            {/* <Map
-            searchResults={searchResults[indexNumber]}
-            startDate={startDate}
-            endDate={endDate}
-            numberOfGuest={numberOfGuest}
-          /> */}
+            <Map carData={cars} />
           </section>
         </main>
       )}

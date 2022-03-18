@@ -279,7 +279,7 @@ function UpdateCar() {
           <form
             onSubmit={() => {
               handleUpdate();
-              router.push("/auth/MyCar");
+              router.push("/auth/UserDashboard"); //redirect to the dashboard
             }}
           >
             <div className="mt-4">

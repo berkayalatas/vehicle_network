@@ -1,4 +1,4 @@
-import React,{ useState} from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { MenuIcon, UserCircleIcon } from "@heroicons/react/solid";
 import { useRouter } from "next/dist/client/router";
@@ -26,7 +26,7 @@ function Menu() {
 
   return (
     <div
-      className={`flex items-center space-x-3 border-2 px-1 py-1.5 md:px-2 rounded-full cursor-pointer`}
+      className={`flex items-center space-x-3 border-2 px-1 py-1.5 md:px-2 rounded-full active:bg-gray-100 hover:bg-gray-100 cursor-pointer`}
       onClick={handleNavClick}
     >
       <MenuIcon className="h-5 w-5 lg:h-6 lg:w-6" />
@@ -107,6 +107,25 @@ function Menu() {
                   />
                 </svg>
                 My cars
+              </div>
+            </Link>
+            <Link href="/auth/LikedCars">
+              <div className="navItem flex">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                Liked cars
               </div>
             </Link>
             <Link href="/contact">
