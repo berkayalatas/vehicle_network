@@ -4,6 +4,7 @@ import ProgressBar from "@badrap/bar-of-progress";
 import Router from 'next/router';
 import { AuthProvider } from "../contexts/AuthContext";
 import 'mapbox-gl/dist/mapbox-gl.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const progress = new ProgressBar({
   size:5,

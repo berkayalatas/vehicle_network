@@ -11,19 +11,31 @@ import {
 } from "firebase/firestore";
 import { useAuth } from "../../contexts/AuthContext";
 import { db } from "../../firebase_config";
+import { toast, ToastContainer } from "react-toastify";
 
 function DeleteModal({ setOpen, carID }) {
   const router = useRouter();
   const { user } = useAuth();
 
+  const notifySuccess = () =>
+    toast.success("Car successfully deleted!", {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+  });
   async function handleDelete() {
     const q = query(
       collection(db, "cars"),
       where("user.userID", "==", user.uid)
     );
-    var docID;
-    const querySnapshot = await getDocs(q);
 
+    const querySnapshot = await getDocs(q);
+    var docID;
+    
     querySnapshot.forEach((doc) => {
       console.log(doc.id);
       const myData = doc.data();
@@ -35,6 +47,7 @@ function DeleteModal({ setOpen, carID }) {
 
     await deleteDoc(doc(db, "cars", docID));
   }
+
   return (
     <div>
       <div className={style.darkBG} />
@@ -53,7 +66,10 @@ function DeleteModal({ setOpen, carID }) {
                 className={style.deleteBtn}
                 onClick={() => {
                   handleDelete();
-                  router.push('/auth/UserDashboard');
+                  notifySuccess();
+                  setTimeout(() =>{
+                    router.push("/auth/UserDashboard");
+                  },2000)
                 }}
               >
                 Yes, Delete
@@ -70,6 +86,17 @@ function DeleteModal({ setOpen, carID }) {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }

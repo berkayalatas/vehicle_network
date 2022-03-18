@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/dist/client/router";
 import emailjs from "emailjs-com";
 import Image from "next/image";
-import contactImg from '../public/images/contact.png';
+import contactImg from "../public/images/contact.png";
+import { toast, ToastContainer } from "react-toastify";
 
 function contact() {
   const router = useRouter();
@@ -24,10 +25,12 @@ function contact() {
       .then(
         (result) => {
           console.log(result.text);
+          notifySuccess();
         },
         (error) => {
           setErrorMessage("Something went wrong.Please try again later.");
           console.log(error.text);
+          notifyError();
         }
       );
 
@@ -35,6 +38,28 @@ function contact() {
 
     setEmailSent(!emailSent);
   }
+
+  const notifySuccess = () =>
+    toast.success(" We received your message.!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+  const notifyError = () =>
+    toast.info("Something went wrong!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
 
   return (
     <div>
@@ -63,7 +88,7 @@ function contact() {
               <div className="flex justify-center align-middle m-2">
                 <div className="w-2/3 ">
                   <div className="bg-blue-500 text-white font-bold rounded-t px-4 py-2">
-                    Thank You!
+                   Something went wrong.
                   </div>
                   <div
                     className="border border-t-0 border-blue-400 rounded-b 
@@ -77,14 +102,12 @@ function contact() {
           )}
 
           <div className="mt-4 px-12 sm:px-24 md:px-48 lg:px-12 lg:mt-10 xl:px-24 xl:max-w-2xl">
-             
-              <h2
-                className="text-4xl text-center text-blue-400 font-display font-semibold xl:text-4xl
+            <h2
+              className="text-4xl text-center text-blue-400 font-display font-semibold xl:text-4xl
                         xl:text-bold"
-              >
-                Contact Us
-              </h2>
-      
+            >
+              Contact Us
+            </h2>
 
             <div className="mt-3 text-gray-700 text-center">
               <p>
@@ -171,6 +194,18 @@ function contact() {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+
     </div>
   );
 }

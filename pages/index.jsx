@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Footer from "../components/footer/Footer";
-import Image from "next/image";
 import Nav from '../components/navbar/Nav'
 
 export default function Home() {

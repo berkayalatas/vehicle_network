@@ -11,7 +11,8 @@ import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-load
 import style from "../../styles/carListing.module.css";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-import Breadcrumb from '../../components/breadcrumbs/Breadcrumb'
+import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
+import { toast, ToastContainer } from "react-toastify";
 
 function ListCar() {
   const router = useRouter();
@@ -55,6 +56,18 @@ function ListCar() {
 
   /* Mapbox Access Token */
   mapboxgl.accessToken = process.env.mapbox_access_token;
+
+  /* Notification */
+  const notifySuccess = () =>
+    toast.success("Car successfully listed!", {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
 
   /* Mapbox geolocation and find user location, define marker here */
   useEffect(() => {
@@ -162,8 +175,10 @@ function ListCar() {
     db.collection("cars")
       .add(newListing)
       .then(() => {
-        //...
-        router.push("/auth/UserDashboard"); //redirect to the dashboard
+        notifySuccess();
+        setTimeout(()=>{
+          router.push("/auth/UserDashboard"); //redirect to the dashboard
+        },2000)
       })
       .catch((error) => {
         setError(error);
@@ -320,9 +335,9 @@ function ListCar() {
               </div>
               <input
                 className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-blue-300"
-                type="text"
+                type="url"
                 required
-                placeholder="Image URL"
+                placeholder="Image URL*"
                 name="img1"
                 value={img1}
                 onChange={(event) => setImg1(event.target.value)}
@@ -401,6 +416,7 @@ function ListCar() {
                 <option defaultValue="">Select Type of Power</option>
                 <option value="Gas">Gas</option>
                 <option value="Electric">Electric</option>
+                <option value="Hybrid ">Hybrid </option>
               </select>
             </div>
             <div className="mt-4">
@@ -448,6 +464,17 @@ function ListCar() {
           </form>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </>
   );
 }

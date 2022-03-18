@@ -19,6 +19,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+//import { toast, ToastContainer } from "react-toastify";
 
 /* Mapbox Access Token */
 mapboxgl.accessToken = process.env.mapbox_access_token;
@@ -61,6 +62,16 @@ function UpdateCar() {
   const [lat, setLat] = useState(49.2485);
   const [zoom, setZoom] = useState(4);
 
+  // const notifySuccess = () =>
+  //   toast.success("Profile successfully updated!", {
+  //     position: "top-right",
+  //     autoClose: 4000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //   });
   /* Fetch Car Data */
   useEffect(() => {
     const fetchData = () => {
@@ -176,14 +187,14 @@ function UpdateCar() {
   /* Mapbox geolocation and find user location, define marker here */
   useEffect(() => {
     if (map.current) return; // initialize map only once
- 
+
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/berkayalatas/cl082a0ql001r14p4m2jypcqr",
       center: [lng, lat],
       zoom: zoom,
     });
- 
+
     let geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       marker: {
@@ -221,9 +232,8 @@ function UpdateCar() {
       where("user.userID", "==", user.uid)
     );
     var docID;
-    //console.log(carID,q)
     const querySnapshot = await getDocs(q);
-    console.log(carId);
+    //console.log(carId);
 
     querySnapshot.forEach((doc) => {
       console.log(doc.id);
@@ -545,6 +555,17 @@ function UpdateCar() {
           </form>
         </div>
       </div>
+      {/* <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      /> */}
     </>
   );
 }

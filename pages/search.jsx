@@ -6,7 +6,6 @@ import { useAuth } from "../contexts/AuthContext";
 import { db } from "../firebase_config";
 import Error from "../components/errors/Error";
 import CarCards from "../components/car_cards/CarCards";
-import { format } from "date-fns";
 import Map from "../components/map/Map";
 
 function Search() {
@@ -16,7 +15,7 @@ function Search() {
   const [cars, setCars] = useState([]);
   const [error, setError] = useState("");
 
-
+  /* timestamp to date */
   function timeConverter(UNIX_timestamp) {
     var a = new Date(UNIX_timestamp * 1000);
     var months = [
@@ -39,11 +38,12 @@ function Search() {
     var time = date + " " + month + " " + year;
     return time;
   }
-  console.log(Date.parse(startDate))
-  const formattedStartDate = timeConverter(Date.parse(startDate));
-  const formattedEndDate = timeConverter(Date.parse(endDate));
-  const range = `from ${formattedStartDate} - to ${formattedEndDate}`;
-
+  //Format the date to human readable format
+  const formattedStartDate = timeConverter(
+    Date.parse(new Date(startDate)) / 1000
+  );
+  const formattedEndDate = timeConverter(Date.parse(new Date(endDate)) / 1000);
+  const range = `from ${formattedStartDate} to ${formattedEndDate}`;
 
   // FETCH DATA ACCORDING TO SEARCH INPUT
   useEffect(() => {
@@ -103,9 +103,12 @@ function Search() {
       ) : (
         <main className="flex flex-col xl:flex-row justify-center align-items-center gap-2 xl:min-h-[100vh]">
           <section className="flex-col xl:overflow-y-scroll xl:max-h-[100vh]">
-            <h1 className="text-2xl md:text-3xl font-semibold mt-2 mb-6 md:pl-5">
+            <h2
+              className="text-2xl text-blue-400 font-display font-semibold ml-4 mt-2 text-left xl:text-4xl
+                    xl:text-bold"
+            >
               Cars in {location.charAt(0).toUpperCase() + location.slice(1)}
-            </h1>
+            </h2>
             <p className="text-md md:text-lg font-semibold m-3 pl-2 pb-2 text-gray-900 ">
               {location.charAt(0).toUpperCase() + location.slice(1)}, {range}
             </p>
@@ -124,6 +127,7 @@ function Search() {
                 </div>
               ))}
             </div>
+
           </section>
           <section className="flex flex-wrap justify-center xl:min-w-[600px]">
             <Map carData={cars} />

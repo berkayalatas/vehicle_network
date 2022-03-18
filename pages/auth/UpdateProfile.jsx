@@ -6,6 +6,7 @@ import Nav from "../../components/navbar/Nav";
 import Link from "next/link";
 import Image from "next/image";
 import update from "../../public/images/update.png";
+import { toast, ToastContainer } from "react-toastify";
 
 function UpdateProfile() {
   const router = useRouter();
@@ -20,6 +21,7 @@ function UpdateProfile() {
     updateUsername,
     updateUsernameErrMsg,
   } = useAuth();
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -52,15 +54,39 @@ function UpdateProfile() {
     Promise.all(promises)
       .then(() => {
         router.push("/");
+        notifySuccess();
       })
       .catch(() => {
         setError("Failed to update account settings");
+        notifyError();
       })
       .finally(() => {
         setLoading(false);
         console.log(currentUser.displayName);
       });
   }
+
+  const notifySuccess = () =>
+    toast.success("Profile successfully updated!", {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+  });
+
+  const notifyError = () =>
+    toast.info("Something went wrong. Try again later!", {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
 
   return (
     <div>
@@ -176,6 +202,17 @@ function UpdateProfile() {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }

@@ -4,7 +4,8 @@ import { useRouter } from "next/dist/client/router";
 import seat from "../../public/logos/seat.png";
 import carDoor from "../../public/logos/car-door.png";
 import Like from "../../components/likeButton/Like";
-
+import { ToastContainer } from 'react-toastify';
+ 
 function CarCards({ carData }) {
   const router = useRouter();
 
@@ -13,8 +14,6 @@ function CarCards({ carData }) {
   /* Number of days between startDate and endDate*/
   const totalDay =
     (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24);
-
-  console.log(carData);
 
   const [toggleLike, setToggleLike] = useState(false);
 
@@ -132,6 +131,17 @@ function CarCards({ carData }) {
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }
