@@ -45,6 +45,14 @@ input[type=number] {
   border: 1px solid rgb(49, 48, 48) !important;
 }
 
+@media (max-width: 400px) {
+  input,
+  input::-webkit-input-placeholder {
+    font-size: 12px;
+    padding-left:3px
+  }
+}
+
 @layer components {
     .button {
         @apply px-4 py-2 border border-blue-200 rounded-full 

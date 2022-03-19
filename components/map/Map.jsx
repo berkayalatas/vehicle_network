@@ -11,34 +11,33 @@ mapboxgl.accessToken = process.env.mapbox_access_token;
 function Map({ carData }) {
   const [selectedPin, setSelectedPin] = useState({});
   const [cars, setCars] = useState(carData);
-  const [cordinates, setCordinates] = useState([]);
+  const [findCord, setFindCord] = useState([]);
 
-  //console.log(cars);
-  // useEffect(() => {
-  //   const cordinateValues = cars?.map((data) => ({
-  //     longitude: data["car"]["location"]["lng"],
-  //     latitude: data["car"]["location"]["lat"],
-  //   }));
-  //   setCordinates(cordinateValues);
-  // }, []);
-  // console.log(cordinates);
-  // useEffect(() => {
-  //   setCars(carData);
-  //   for (let i = 0; i < cars.length; i) {
-  //     let longitude, latitude;
-  //     longitude += cars[i]["car"]["location"]["lng"];
-  //     latitude += cars[i]["car"]["location"]["lat"];
-  //     var meanLongitude = longitude / cars.length;
-  //     var meanLatitude = latitude / cars.length;
+  // function a() {
+  //   if (carData != []) {
+  //     var cordinates = carData?.map((data) => ({
+  //       longitude: data["car"]["location"]["lng"],
+  //       latitude: data["car"]["location"]["lat"],
+  //     }));
+  //   }  if (carData == [])  {
+  //     setTimeout(() => {
+  //       var cordinates = carData?.map((data) => ({
+  //         longitude: data["car"]["location"]["lng"],
+  //         latitude: data["car"]["location"]["lat"],
+  //       }));
+  //       setFindCord(cordinates)
+  //     }, 1000);
   //   }
-  //   setLongitude(meanLongitude);
-  //   setLatitude(meanLatitude);
-  // }, []);
-  // console.log(latitude,longitude);
+
+  //   return cordinates;
+  // }
+
+  // //console.log(cordinates);
+  // const center = getCenter(a());
+  // console.log(center);
 
   //latitude and longitude of the center of locations
   //!TODO GET CENTER OF CITY
-  const center = getCenter(cordinates);
 
   //console.log(center?.longitude);
   //console.log(  center?.longitude, center?.latitude);
@@ -77,7 +76,7 @@ function Map({ carData }) {
               }}
               aria-label="car"
             >
-              <Image src={carImg} width={40} height={40} alt="CAR" />
+              <Image src={carImg} width={35} height={35} alt="CAR" />
             </p>
           </Marker>
           {/* {console.log(selectedPin.lng, marker["car"]["location"]["lng"])} */}

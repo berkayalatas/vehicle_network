@@ -77,8 +77,8 @@ function UpdateUser() {
         <div className="flex flex-col mt-3">
           <div className="mt-6 flex justify-center pb-5 text-sm font-display font-semibold text-gray-700 text-center">
             Do you want to update your profile ?{" "}
-            <div className="cursor-pointer ml-3 text-blue-400 hover:text-blue-500">
-              <Link href="/auth/UpdateProfile">Update</Link>
+            <div className="cursor-pointer ml-3 font-bold text-blue-500 hover:text-blue-600">
+              <Link href="/auth/UpdateProfile">UPDATE</Link>
             </div>
           </div>
         </div>

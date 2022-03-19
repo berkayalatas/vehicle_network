@@ -99,7 +99,7 @@ function UserDashboard() {
               className="text-center text-2xl text-blue-400 font-display font-semibold  xl:text-3xl
                             xl:text-bold"
             >
-              Upcoming Travels
+              Upcoming Rentals
             </h3>
             {/* Filter upcoming travels filter expired travels */}
             <div className="mt-2 flex flex-col justify-evenly items-center">

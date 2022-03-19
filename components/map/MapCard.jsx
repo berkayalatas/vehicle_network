@@ -23,19 +23,19 @@ function MapCard({ carImg, description, model, brand, price }) {
 
       <div className="w-full flex flex-col">
         <div className="pl-2 pb-0 flex-1">
-          <div className="text-lg font-bold text-gray-700  flex items-center mb-2">
+          <div className="text-lg font-bold mt-1 text-gray-700  flex items-center mb-2">
             {brand + " " + model}
           </div>
-          <p className="text-md font-mono text-gray-700 ">
-            <span className="text-lg font-mono font-semibold text-grey-darkest">
+          <p className="text-lg text-gray-700 ">
+            <span className="text-xl font-semibold text-grey-darkest">
               {price}
             </span>{" "}
             € / day
           </p>
-          <div className="flex align-middle justify-center items-center mt-2">
-            <div className="pr-2 text-xs text-gray-700 ">
-              {description.length > 200
-                ? description.substring(0, 200).concat("...")
+          <div className="flex mt-2">
+            <div className="pr-2 text-xs text-left text-gray-700 ">
+              {description.length > 160
+                ? description.substring(0, 160).concat("...")
                 : description}
             </div>
           </div>

@@ -14,8 +14,6 @@ import Menu from "./Menu";
 function Nav({ placeholder }) {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [personNumber, setPersonNumber] = useState(1);
-
   const [open, setOpen] = useState(false);
   const [warningContent, setWarningContent] = useState("");
   const [searchInput, setSearchInput] = useState("");
@@ -41,14 +39,18 @@ function Nav({ placeholder }) {
   };
 
   const search = () => {
+    /* Check if user authenticated */
     if (currentUser) {
+      /* search input validation */
       if (searchInput.length > 2 && searchInput.charAt(0) != " ") {
+        /* Date must be greater than today's date */
         if (startDate && endDate >= new Date()) {
+          /* Check the cities */
           if (
             searchInput.toLowerCase() === "berlin" ||
             searchInput.toLowerCase() === "vienna" ||
             searchInput.toLowerCase() === "paris"
-          ) {
+          ) {            
             router.push({
               pathname: "/search",
               query: {
@@ -57,6 +59,7 @@ function Nav({ placeholder }) {
                 endDate: endDate.toISOString(),
               },
             });
+            setTimeout(()=>{if(router.pathname.includes('search')) router.reload();})            
           } else {
             router.push("/NotFound");
           }
@@ -101,9 +104,9 @@ function Nav({ placeholder }) {
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
             type="text"
-            className="flex-grow md:pl-5 ml-2 w-full border-2 py-1 sm:border-none rounded-full bg-transparent outline-none
+            className="flex-grow md:pl-5 ml-1 w-full border-2 py-1 sm:border-none rounded-full bg-transparent outline-none
                text-gray-600 placeholder-gray-500"
-            placeholder={placeholder || "Seach City"}
+            placeholder={placeholder || "Paris-Berlin-Vienna"}
           />
           <SearchIcon
             onClick={search}
@@ -136,21 +139,7 @@ function Nav({ placeholder }) {
               onChange={handleDatePicker}
               scroll={{ enabled: false }}
             />
-            <div className="flex items-center border-b-20 lg:w-full mb-2">
-              <h2 className="text-md sm:text-xl ml-3 flex-grow font-semibold text-gray-800">
-                {" "}
-                Number of person
-              </h2>
-              <UsersIcon className="h-5 text-gray-800" />
-              <input
-                value={personNumber}
-                onChange={(e) => setPersonNumber(e.target.value)}
-                type="number"
-                min={1}
-                max={3}
-                className="w-12 pl-2 text-lg outline-none text-blue-500"
-              />
-            </div>
+ 
             <div className="flex justify-center align-middle sm:w-full ">
               <button
                 onClick={resetSearchInput}

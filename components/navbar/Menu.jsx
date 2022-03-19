@@ -29,13 +29,13 @@ function Menu() {
       className={`flex items-center space-x-3 border-2 px-1 py-1.5 md:px-2 rounded-full active:bg-gray-100 hover:bg-gray-100 cursor-pointer`}
       onClick={handleNavClick}
     >
-      <MenuIcon className="h-5 w-5 lg:h-6 lg:w-6" />
+      <MenuIcon className="h-4 w-4 lg:h-6 lg:w-6" />
       {currentUser ? (
         <div
-          className="p-2 w-7 h-7 lg:w-9 lg:h-7 flex justify-center items-center 
-            rounded-full bg-blue-400 text-lg text-white uppercase"
+          className="p-2 w-5 h-5 lg:w-9 lg:h-7 flex justify-center items-center 
+            rounded-full bg-blue-400 text-sm lg:text-lg text-white uppercase"
         >
-          {currentUser.displayName?.charAt(0) || currentUser.email?.charAt(0)}
+          {currentUser.displayName?.slice(0,2) || currentUser.email?.slice(0,2)}
         </div>
       ) : (
         <UserCircleIcon className="h-6 w-6 lg:h-7 lg:w-7 text-blue-400" />

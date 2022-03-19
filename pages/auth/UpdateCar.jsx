@@ -72,6 +72,7 @@ function UpdateCar() {
   //     draggable: true,
   //     progress: undefined,
   //   });
+  
   /* Fetch Car Data */
   useEffect(() => {
     const fetchData = () => {

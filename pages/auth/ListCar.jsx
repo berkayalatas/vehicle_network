@@ -13,6 +13,7 @@ import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import { toast, ToastContainer } from "react-toastify";
+import { v4 as uuidv4 } from 'uuid';
 
 function ListCar() {
   const router = useRouter();
@@ -123,10 +124,10 @@ function ListCar() {
   }, []);
 
   /* using timestamp generate a car id */
-  function toTimestamp(strDate) {
-    var datum = Date.parse(strDate);
-    return datum / 1000;
-  }
+  // function toTimestamp(strDate) {
+  //   var datum = Date.parse(strDate);
+  //   return datum / 1000;
+  // }
 
   /* Firebase Database JSON structure for car listing */
   const newListing = {
@@ -138,7 +139,7 @@ function ListCar() {
       roomNo: roomNo, // TODO: chat application integration
     },
     car: {
-      carID: toTimestamp(new Date()), // timestamp (unique ID)
+      carID: uuidv4(), //(unique ID)
       location: {
         lng: lng,
         lat: lat,
@@ -355,7 +356,7 @@ function ListCar() {
                 required
                 rows="2"
                 minLength="6"
-                maxLength="200"
+                maxLength="190"
                 placeholder="Car Description"
                 value={carDescription}
                 onChange={(event) => setCarDescription(event.target.value)}
