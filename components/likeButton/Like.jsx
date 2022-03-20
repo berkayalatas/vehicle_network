@@ -1,72 +1,99 @@
 import React, { useState } from "react";
 import style from "../../styles/LikeBtn.module.css";
-import { toast } from 'react-toastify';
- 
-function Like({ active, setActive, carID, carImg, brand, model, description, price, city,startDate, endDate, available }) {
+import { toast } from "react-toastify";
+import { useCar } from '../../contexts/CarContext';
 
-  const notifySuccess = () => toast.success(' Car added to liked cars!', {
-    position: "top-center",
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
+function Like({
+  active,
+  setActive,
+  carID,
+  carImg,
+  brand,
+  model,
+  description,
+  price,
+  city,
+  startDate,
+  endDate,
+  available,
+}) {
+  const { notifySuccess } = useCar();
 
-  const notifyWarning = () => toast.info('Removed from liked cars!', {
-    position: "top-center",
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
+  const notifyWarning = () =>
+    toast.info("Removed from liked cars!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
 
   const toggleClass = () => {
     setActive(!active);
-    active ? 
-    removeFromLocalStorage(carID) : 
-    addItemToStorage(carID, carImg, brand, model, description, price, city, startDate, endDate,available );     
+    active
+      ? removeFromLocalStorage(carID)
+      : addItemToStorage(
+          carID,
+          carImg,
+          brand,
+          model,
+          description,
+          price,
+          city,
+          startDate,
+          endDate,
+          available
+        );
   };
 
-  function addItemToStorage(carID, carImg, brand, model, description, price,city, startDate, endDate,available ){
-    var cars = JSON.parse(localStorage.getItem("likedCars")||"[]"); // get current objects
+  function addItemToStorage(
+    carID,
+    carImg,
+    brand,
+    model,
+    description,
+    price,
+    city,
+    startDate,
+    endDate,
+    available
+  ) {
+    var cars = JSON.parse(localStorage.getItem("likedCars") || "[]"); // get current objects
     var carData = {
-      carID : carID,
-      active:true, 
-      carImg :carImg,
-      brand : brand,
-      model : model,
-      description : description, 
-      city:city,
+      carID: carID,
+      active: true,
+      carImg: carImg,
+      brand: brand,
+      model: model,
+      description: description,
+      city: city,
       price: price,
-      startDate:startDate,
-      endDate:endDate,
-      available:available 
+      startDate: startDate,
+      endDate: endDate,
+      available: available,
     };
     cars.push(carData); //push new one
-    
-    localStorage.setItem("likedCars" ,JSON.stringify(cars))
-    notifySuccess();
-}
 
-  const removeFromLocalStorage = (carID) =>{
-    const likedCars = JSON.parse(localStorage.getItem("likedCars"))
-    
-    const filteredCars = likedCars.filter((car)=> car.carID != carID);
-    localStorage.setItem("likedCars" ,JSON.stringify(filteredCars))
-    notifyWarning();
+    localStorage.setItem("likedCars", JSON.stringify(cars));
+    notifySuccess("Car added to liked cars!");
   }
 
-  return (
-    <>    
-    <button
-      className={active ? `${style.liked} ${style.likeBtn}` : style.likeBtn}
-      onClick={toggleClass}
-    ></button>
+  const removeFromLocalStorage = (carID) => {
+    const likedCars = JSON.parse(localStorage.getItem("likedCars"));
 
+    const filteredCars = likedCars.filter((car) => car.carID != carID);
+    localStorage.setItem("likedCars", JSON.stringify(filteredCars));
+    notifyWarning();
+  };
+
+  return (
+    <>
+      <button
+        className={active ? `${style.liked} ${style.likeBtn}` : style.likeBtn}
+        onClick={toggleClass}
+      ></button>
     </>
   );
 }

@@ -19,6 +19,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { useCar } from '../../contexts/CarContext';
 //import { toast, ToastContainer } from "react-toastify";
 
 /* Mapbox Access Token */
@@ -28,7 +29,7 @@ function UpdateCar() {
   const router = useRouter();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { timeStamptoDate, toTimestamp, timeConverter } = useCar();
   /* User */
   const [phoneNumber, setPhoneNumber] = useState("");
   const [drivingLicenceNo, setDrivingLicenceNo] = useState("");
@@ -99,7 +100,6 @@ function UpdateCar() {
         })
         .catch((error) => {
           console.error("Failed to bring car", error);
-          setError(error);
         });
     };
     fetchData();
@@ -131,12 +131,7 @@ function UpdateCar() {
       });
   }, [car]);
 
-  /* Conver timestamp to Data input format */
-  const timeStamptoDate = (timestamp) => {
-    var date = new Date(timestamp * 1000);
-    return date;
-  };
-
+ 
   /* Date Range DEFAULT: Previous selection */
   const dateRange = {
     startDate: timeStamptoDate(rentedFrom),
@@ -144,11 +139,6 @@ function UpdateCar() {
     key: "selection",
   };
 
-  /* using timestamp generate a car id */
-  function toTimestamp(strDate) {
-    var datum = Date.parse(strDate);
-    return datum / 1000;
-  }
 
   /* Handle Date Selection */
   const handleDatePicker = (ranges) => {
@@ -156,35 +146,7 @@ function UpdateCar() {
     setRentedTo(toTimestamp(ranges.selection.endDate));
   };
 
-  // /* We're refreshing thepage so User will be able see the updated values */
-  // function refreshPage(trueOrFalse) {
-  //   window.location.reload(trueOrFalse);
-  // }
-
-  /* Timestamp to human readable date converter */
-  function timeConverter(UNIX_timestamp) {
-    var a = new Date(UNIX_timestamp * 1000);
-    var months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var time = date + " " + month + " " + year + " ";
-    return time;
-  }
-
+  
   /* Mapbox geolocation and find user location, define marker here */
   useEffect(() => {
     if (map.current) return; // initialize map only once

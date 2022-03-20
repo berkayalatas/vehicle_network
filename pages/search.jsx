@@ -7,52 +7,20 @@ import { db } from "../firebase_config";
 import Error from "../components/errors/Error";
 import CarCards from "../components/car_cards/CarCards";
 import Map from "../components/map/Map";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import Dropdown from "../components/dropdown/Dropdown";
-
+import { getCenter } from "geolib";
+import { useCar } from '../contexts/CarContext';
 function Search() {
   const router = useRouter();
   const { user } = useAuth();
   const { location, startDate, endDate } = router.query;
   const [cars, setCars] = useState([]);
   const [error, setError] = useState("");
-  const [sortedData, setSortedData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { timeConverter, notifySuccess  } = useCar()  /* timestamp to date, Notification */
+  //const [sortedData, setSortedData] = useState([]);
 
-  /* Notification */
-  const notifySuccess = () =>
-    toast.success("Cars successfully sorted!", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-
-  /* timestamp to date */
-  function timeConverter(UNIX_timestamp) {
-    var a = new Date(UNIX_timestamp * 1000);
-    var months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var time = date + " " + month + " " + year;
-    return time;
-  }
   //Format the date to human readable format
   const formattedStartDate = timeConverter(
     Date.parse(new Date(startDate)) / 1000
@@ -84,7 +52,9 @@ function Search() {
                   car.reservationDetails["startDate"] &&
                 Date.parse(endDate) / 1000 <= car.reservationDetails["endDate"]
             );
+            setLoading(true);
             setCars(filterByDate);
+            setLoading(false);
           } else {
             setCars(cars);
           }
@@ -96,7 +66,6 @@ function Search() {
     }
     fetchCarData();
   }, []);
-
 
   /* Filtering according to price */
   function filteredByPrice() {
@@ -112,6 +81,15 @@ function Search() {
     );
     setCars([...sortedBySeatNumber]);
   }
+
+  var cordinates = cars.map((data) => ({
+    longitude: data["car"]["location"]["lng"],
+    latitude: data["car"]["location"]["lat"],
+  }));
+  console.log(cordinates);
+  const center = getCenter(cordinates);
+  console.log(center);
+
 
   return (
     <div>
@@ -141,7 +119,7 @@ function Search() {
                 className="button"
                 onClick={() => {
                   filteredByPrice();
-                  notifySuccess();
+                  notifySuccess("Cars successfully sorted!"); 
                 }}
               >
                 Car Price
@@ -150,7 +128,7 @@ function Search() {
                 className="button"
                 onClick={() => {
                   filteredByNumberOfSeat();
-                  notifySuccess();
+                  notifySuccess("Cars successfully sorted!"); 
                 }}
               >
                 Number of Seat
@@ -193,7 +171,7 @@ function Search() {
             </div>
           </section>
           <section className="flex flex-wrap justify-center xl:min-w-[600px]">
-            <Map carData={cars} />
+            <Map carData={!loading && cars} center={!loading && center} loading={loading} />
           </section>
         </main>
       )}

@@ -10,12 +10,13 @@ import { CalendarIcon } from "@heroicons/react/outline";
 import Error from "../../components/errors/Error";
 import notfound from "../../public/images/notfound.png";
 import DeleteModal from "../../components/modals/DeleteModal";
-import Breadcrumb from '../../components/breadcrumbs/Breadcrumb'
+import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
+import { useCar } from "../../contexts/CarContext";
 
 function MyCar() {
   const { user } = useAuth();
   const router = useRouter();
-
+  const { timeConverter } = useCar();
   const [error, setError] = useState("");
   const [cars, setCars] = useState([]);
   const [open, setOpen] = useState(false);
@@ -50,29 +51,6 @@ function MyCar() {
     fetchData();
   }, []);
 
-  function timeConverter(UNIX_timestamp) {
-    var a = new Date(UNIX_timestamp * 1000);
-    var months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var time = date + " " + month + " " + year + " ";
-    return time;
-  }
-
   // console.log(cars);
 
   return (
@@ -86,11 +64,14 @@ function MyCar() {
           My Cars
         </h2>
       </div>
- 
-      <Breadcrumb         
-        title1={"User Dashboard"} href1={"/auth/UserDashboard"}
-        title2={"List new car"} href2={"/auth/ListCar"}
-        title3={"Liked Cars"} href3={"/auth/LikedCars"}
+
+      <Breadcrumb
+        title1={"User Dashboard"}
+        href1={"/auth/UserDashboard"}
+        title2={"List new car"}
+        href2={"/auth/ListCar"}
+        title3={"Liked Cars"}
+        href3={"/auth/LikedCars"}
       />
 
       {error && <Error error={error} />}

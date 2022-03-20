@@ -11,10 +11,12 @@ import empty from "../../public/images/empty.png";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import available from "../../public/logos/available.png";
 import expired from "../../public/logos/expired.png";
+import { useCar } from "../../contexts/CarContext";
 
 function MyCar() {
   const { user } = useAuth();
   const router = useRouter();
+  const { timeConverter } = useCar();
 
   const [error, setError] = useState("");
   const [cars, setCars] = useState([]);
@@ -53,29 +55,6 @@ function MyCar() {
   //   }, []);
 
   //console.log(cars);
-
-  function timeConverter(UNIX_timestamp) {
-    var a = new Date(UNIX_timestamp * 1000);
-    var months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var time = date + " " + month + " " + year + " ";
-    return time;
-  }
 
   return (
     <div className="overflow-x-hidden">

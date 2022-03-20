@@ -11,22 +11,14 @@ import {
 } from "firebase/firestore";
 import { useAuth } from "../../contexts/AuthContext";
 import { db } from "../../firebase_config";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import { useCar } from '../../contexts/CarContext';
 
 function DeleteModal({ setOpen, carID }) {
   const router = useRouter();
   const { user } = useAuth();
-
-  const notifySuccess = () =>
-    toast.success("Car successfully deleted!", {
-      position: "top-right",
-      autoClose: 4000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-  });
+  const { notifySuccess } = useCar();
+ 
   async function handleDelete() {
     const q = query(
       collection(db, "cars"),
@@ -66,7 +58,7 @@ function DeleteModal({ setOpen, carID }) {
                 className={style.deleteBtn}
                 onClick={() => {
                   handleDelete();
-                  notifySuccess();
+                  notifySuccess("Car successfully deleted!")
                   setTimeout(() =>{
                     router.push("/auth/UserDashboard");
                   },2000)

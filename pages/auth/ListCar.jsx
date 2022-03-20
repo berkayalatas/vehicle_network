@@ -12,14 +12,15 @@ import style from "../../styles/carListing.module.css";
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { v4 as uuidv4 } from 'uuid';
+import { useCar } from '../../contexts/CarContext';
 
 function ListCar() {
   const router = useRouter();
   const { user, currentUser } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { notifySuccess } = useCar();
   /* User */
   const [phoneNumber, setPhoneNumber] = useState("");
   const [drivingLicenceNo, setDrivingLicenceNo] = useState("");
@@ -59,16 +60,8 @@ function ListCar() {
   mapboxgl.accessToken = process.env.mapbox_access_token;
 
   /* Notification */
-  const notifySuccess = () =>
-    toast.success("Car successfully listed!", {
-      position: "top-right",
-      autoClose: 4000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+  notifySuccess("Car successfully listed!")
+
 
   /* Mapbox geolocation and find user location, define marker here */
   useEffect(() => {
@@ -123,12 +116,6 @@ function ListCar() {
     });
   }, []);
 
-  /* using timestamp generate a car id */
-  // function toTimestamp(strDate) {
-  //   var datum = Date.parse(strDate);
-  //   return datum / 1000;
-  // }
-
   /* Firebase Database JSON structure for car listing */
   const newListing = {
     user: {
@@ -182,7 +169,6 @@ function ListCar() {
         },2000)
       })
       .catch((error) => {
-        setError(error);
         console.log(error);
       });
   }
