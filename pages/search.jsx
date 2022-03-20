@@ -78,7 +78,13 @@ function Search() {
               (theCar) =>
                 theCar.car.city.toLowerCase() == location.toLowerCase()
             );
-            setCars(filterByInput);
+            const filterByDate = filterByInput?.filter(
+              (car, key) =>
+                Date.parse(startDate) / 1000 >=
+                  car.reservationDetails["startDate"] &&
+                Date.parse(endDate) / 1000 <= car.reservationDetails["endDate"]
+            );
+            setCars(filterByDate);
           } else {
             setCars(cars);
           }
@@ -88,11 +94,9 @@ function Search() {
           setError("Failed to bring cars");
         });
     }
-
     fetchCarData();
   }, []);
 
-  //console.log(cars)
 
   /* Filtering according to price */
   function filteredByPrice() {
@@ -152,10 +156,7 @@ function Search() {
                 Number of Seat
               </button>
 
-              <Dropdown
-                cars={cars}
-                setCars={setCars}
-              />
+              <Dropdown cars={cars} setCars={setCars} />
             </div>
             <div className="flex flex-col w-full">
               {cars?.map((car, key) => (

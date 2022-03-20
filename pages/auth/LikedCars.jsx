@@ -21,7 +21,7 @@ function MyCar() {
   const [open, setOpen] = useState(false);
 
   const fetchLikedCars = JSON.parse(localStorage.getItem("likedCars"));
-  console.log(fetchLikedCars);
+
   /* Receive car data if user has a car in the database */
   //   useEffect(() => {
   //     const fetchData = () => {

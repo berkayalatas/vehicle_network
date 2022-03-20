@@ -38,7 +38,6 @@ function CarCards({ carData }) {
     handleLikeClick();
   }, []);
 
-  console.log(carData);
 
   return (
     <div
@@ -144,6 +143,8 @@ function CarCards({ carData }) {
                   ? hybrid
                   : carData["car"]["power"] === "Electric"
                   ? electric
+                  : carData["car"]["power"] === "" 
+                  ? gas 
                   : gas
               }
               width={30}

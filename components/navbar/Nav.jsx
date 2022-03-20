@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { GlobeAltIcon, UsersIcon, SearchIcon } from "@heroicons/react/solid";
+import { GlobeAltIcon, SearchIcon } from "@heroicons/react/solid";
 import "react-date-range/dist/styles.css"; // main style file for date picker
 import "react-date-range/dist/theme/default.css"; // theme css file date picker
 import { DateRangePicker } from "react-date-range";
@@ -9,7 +9,9 @@ import { useAuth } from "../../contexts/AuthContext";
 import logo from "../../public/logo.jpg";
 import WarningModel from "../modals/WarningModal";
 import Menu from "./Menu";
-//import { getDocs, collection } from "firebase/firestore";
+// import { db } from "../../firebase_config";
+// import { useCar } from "../../contexts/CarContext";
+// import { getDocs, collection } from "firebase/firestore";
 
 function Nav({ placeholder }) {
   const [startDate, setStartDate] = useState(new Date());
@@ -17,9 +19,17 @@ function Nav({ placeholder }) {
   const [open, setOpen] = useState(false);
   const [warningContent, setWarningContent] = useState("");
   const [searchInput, setSearchInput] = useState("");
-
   const router = useRouter();
   const { currentUser } = useAuth();
+  //const [allCars, setAllCars] = useState([]);
+  //  const { fetchData } = useCar();
+  //const [isLoading, setIsLoading] = useState(true);
+
+  // useEffect(() => {
+  //   fetchData(setAllCars);
+  // }, []);
+
+  //console.log(allCars);
 
   const dateRange = {
     startDate: startDate,
@@ -50,7 +60,7 @@ function Nav({ placeholder }) {
             searchInput.toLowerCase() === "berlin" ||
             searchInput.toLowerCase() === "vienna" ||
             searchInput.toLowerCase() === "paris"
-          ) {            
+          ) {
             router.push({
               pathname: "/search",
               query: {
@@ -59,7 +69,9 @@ function Nav({ placeholder }) {
                 endDate: endDate.toISOString(),
               },
             });
-            setTimeout(()=>{if(router.pathname.includes('search')) router.reload();})            
+            setTimeout(() => {
+              if (router.pathname.includes("search")) router.reload();
+            });
           } else {
             router.push("/NotFound");
           }
@@ -139,7 +151,7 @@ function Nav({ placeholder }) {
               onChange={handleDatePicker}
               scroll={{ enabled: false }}
             />
- 
+
             <div className="flex justify-center align-middle sm:w-full ">
               <button
                 onClick={resetSearchInput}

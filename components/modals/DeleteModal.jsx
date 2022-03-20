@@ -42,7 +42,7 @@ function DeleteModal({ setOpen, carID }) {
       if (myData["car"]["carID"] == carID) {
         docID = doc.id;
       }
-      console.log("Document data:", doc.data());
+      //console.log("Document data:", doc.data());
     });
 
     await deleteDoc(doc(db, "cars", docID));

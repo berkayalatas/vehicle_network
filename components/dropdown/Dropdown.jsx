@@ -6,7 +6,7 @@ export default function Dropdown({ cars, setCars }) {
   /* Filtering according to power type */
 
   const sortedByPower = cars.sort((c) => c.car["power"] === selected);
-  console.log(sortedByPower);
+  //console.log(sortedByPower);
 
   return (
     <select

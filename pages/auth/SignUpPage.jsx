@@ -11,7 +11,7 @@ function SignUpPage() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
-  const { signup, signUpErrMsg, user, currentUser } = useAuth();
+  const { signup, signUpErrMsg} = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [userEmail, setUserEmail] = useState("");

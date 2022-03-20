@@ -105,7 +105,7 @@ function UpdateCar() {
     fetchData();
   }, []);
 
-  console.log(car);
+  //console.log(car);
 
   /* Bring the values from DB and set them*/
   useEffect(() => {
@@ -242,7 +242,7 @@ function UpdateCar() {
       if (myData["car"]["carID"] == carId) {
         docID = doc.id;
       }
-      console.log("Document data:", doc.data());
+      //console.log("Document data:", doc.data());
     });
 
     const batch = writeBatch(db);

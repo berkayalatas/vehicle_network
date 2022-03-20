@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
  
 function Like({ active, setActive, carID, carImg, brand, model, description, price, city,startDate, endDate, available }) {
 
-  console.log(startDate, endDate);
   const notifySuccess = () => toast.success(' Car added to liked cars!', {
     position: "top-center",
     autoClose: 3000,

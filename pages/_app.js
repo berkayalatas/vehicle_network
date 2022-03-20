@@ -3,6 +3,7 @@ import '../styles/globals.css'
 import ProgressBar from "@badrap/bar-of-progress";
 import Router from 'next/router';
 import { AuthProvider } from "../contexts/AuthContext";
+import { CarProvider } from '../contexts/CarContext';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -21,7 +22,9 @@ function MyApp({ Component, pageProps }) {
   return(
   <>
     <AuthProvider>
-      <Component {...pageProps} />
+      <CarProvider>
+        <Component {...pageProps} />
+      </CarProvider>
     </AuthProvider>
   </>
 )
