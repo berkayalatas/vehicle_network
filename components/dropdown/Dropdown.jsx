@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 
 export default function Dropdown({ cars, setCars }) {
   const [selected, setSelected] = useState("");
-  
+
   /* Filtering according to power type */
-  
+
   const sortedByPower = cars.sort((c) => c.car["power"] === selected);
   console.log(sortedByPower);
-   
+
   return (
     <select
       id="city"
@@ -16,10 +16,10 @@ export default function Dropdown({ cars, setCars }) {
       value={selected}
       onChange={(e) => {
         setSelected(e.target.value);
-        setCars([...sortedByPower])
+        setCars([...sortedByPower]);
       }}
       className="
-      w-32 text-lg py-2 border-2 mt-2 border-gray-600  focus:border-blue-300
+        w-32 text-lg py-2 border-2 border-blue-100  focus:border-blue-200
         focus:ring-blue-500 h-full pl-2 pr-7 bg-transparent text-gray-500 sm:text-sm rounded-md"
     >
       <option defaultValue value="">

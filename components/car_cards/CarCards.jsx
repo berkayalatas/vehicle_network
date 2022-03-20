@@ -37,6 +37,8 @@ function CarCards({ carData }) {
     handleLikeClick();
   }, []);
 
+  console.log(carData)
+
   return (
     <div
       className="flex flex-col md:flex-row pt-4 pb-7 px-2 pr-4 border-b
@@ -94,6 +96,9 @@ function CarCards({ carData }) {
             description={carData["car"]["carDescription"]}
             price={carData["reservationDetails"]["price"]}
             city={carData["car"]["city"]}
+            startDate={carData["reservationDetails"]["startDate"]}
+            endDate={carData["reservationDetails"]["endDate"]}
+            available={carData["car"]["available"]}
           />
         </div>
 

@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import style from "../../styles/LikeBtn.module.css";
 import { toast } from 'react-toastify';
  
-function Like({ active, setActive, carID, carImg, brand, model, description, price, city }) {
+function Like({ active, setActive, carID, carImg, brand, model, description, price, city,startDate, endDate, available }) {
 
+  console.log(startDate, endDate);
   const notifySuccess = () => toast.success(' Car added to liked cars!', {
     position: "top-center",
     autoClose: 3000,
@@ -26,10 +27,12 @@ function Like({ active, setActive, carID, carImg, brand, model, description, pri
 
   const toggleClass = () => {
     setActive(!active);
-    active ? removeFromLocalStorage(carID) : addItemToStorage(active, carID, carImg, brand, model, description, price, city);     
+    active ? 
+    removeFromLocalStorage(carID) : 
+    addItemToStorage(carID, carImg, brand, model, description, price, city, startDate, endDate,available );     
   };
 
-  function addItemToStorage(active, carID, carImg, brand, model, description, price , city){
+  function addItemToStorage(carID, carImg, brand, model, description, price,city, startDate, endDate,available ){
     var cars = JSON.parse(localStorage.getItem("likedCars")||"[]"); // get current objects
     var carData = {
       carID : carID,
@@ -39,7 +42,10 @@ function Like({ active, setActive, carID, carImg, brand, model, description, pri
       model : model,
       description : description, 
       city:city,
-      price: price
+      price: price,
+      startDate:startDate,
+      endDate:endDate,
+      available:available 
     };
     cars.push(carData); //push new one
     

@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import Image from "next/image";
 import PrivateRoute from "../PrivateRoute";
 import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
 import Nav from "../../components/navbar/Nav";
-import { db } from "../../firebase_config";
 import { CalendarIcon } from "@heroicons/react/outline";
 import Error from "../../components/errors/Error";
 import empty from "../../public/images/empty.png";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
+import available from "../../public/logos/available.png";
+import expired from "../../public/logos/expired.png";
 
 function MyCar() {
   const { user } = useAuth();
@@ -20,7 +21,7 @@ function MyCar() {
   const [open, setOpen] = useState(false);
 
   const fetchLikedCars = JSON.parse(localStorage.getItem("likedCars"));
-
+  console.log(fetchLikedCars);
   /* Receive car data if user has a car in the database */
   //   useEffect(() => {
   //     const fetchData = () => {
@@ -76,8 +77,6 @@ function MyCar() {
     return time;
   }
 
-  // console.log(cars);
-
   return (
     <div className="overflow-x-hidden">
       <Nav />
@@ -110,7 +109,7 @@ function MyCar() {
                 <div key={key} className="w-full md:w-1/2 xl:w-1/3 px-4">
                   <div className="bg-gray-50 hover:shadow-lg rounded-xl overflow-hidden mb-10 border-2">
                     <img
-                      src={car.carImg}                      
+                      src={car.carImg}
                       alt="image"
                       className="w-full transform duration-200 hover:scale-110"
                     />
@@ -183,24 +182,36 @@ function MyCar() {
                               {car?.price} € / day
                             </p>
                           </div>
-                        </div>
-                        {/* <div className="flex justify-start align-middle items-center mb-1">
-                          <div className="flex justify-end align-middle">
-                            <div>
-                              <CalendarIcon className="h-6 w-6 m-2" />
-                            </div>
-                            <div className="mt-2 text-left text-md font-semibold pb-1 lg:text-lg">
-                              from{" "}
-                              {timeConverter(
-                                car?.reservationDetails["startDate"]
-                              )}{" "}
-                              to{" "}
-                              {timeConverter(
-                                car?.reservationDetails["endDate"]
-                              )}
+                          <div className="flex justify-start align-middle items-center mb-1">
+                            <div className="flex justify-end align-middle">
+                              <div>
+                                <CalendarIcon className="h-6 w-6 m-2" />
+                              </div>
+                              <div className="mt-2 text-left text-md font-semibold pb-1 lg:text-lg">
+                                from {timeConverter(car?.startDate)} to{" "}
+                                {timeConverter(car?.endDate)}
+                              </div>
                             </div>
                           </div>
-                        </div> */}
+                          <div className="mt-1">
+                            {car?.endDate > Date.parse(new Date()) / 1000 &&
+                            car?.available ? (
+                              <Image
+                                src={available}
+                                width={50}
+                                height={50}
+                                alt="Available"
+                              />
+                            ) : (
+                              <Image
+                                src={expired}
+                                width={50}
+                                height={50}
+                                alt="Expired"
+                              />
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

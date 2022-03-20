@@ -109,8 +109,6 @@ function Search() {
     setCars([...sortedBySeatNumber]);
   }
 
-
-
   return (
     <div>
       <Nav
