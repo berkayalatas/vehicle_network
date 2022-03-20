@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/dist/client/router";
+import noCar from '../../public/images/noCar.png';
 
 function MapCard({ carImg, description, model, brand, price }) {
   const router = useRouter();
@@ -13,9 +14,9 @@ function MapCard({ carImg, description, model, brand, price }) {
       <div className="relative w-full">
         <Image
           className="rounded-md"
-          src={carImg}
+          src={carImg ? carImg : noCar}
           layout="fill"
-          alt="Room Image"
+          alt="Car Image"
           objectFit="fill"
           objectPosition="left"
         />

@@ -8,6 +8,7 @@ import electric from "../../public/logos/electric.png";
 import hybrid from "../../public/logos/hybrid.png";
 import Like from "../../components/likeButton/Like";
 import { ToastContainer } from "react-toastify";
+import noCar from "../../public/images/noCar.png";
 
 function CarCards({ carData }) {
   const router = useRouter();
@@ -37,7 +38,7 @@ function CarCards({ carData }) {
     handleLikeClick();
   }, []);
 
-  console.log(carData)
+  console.log(carData);
 
   return (
     <div
@@ -58,8 +59,15 @@ function CarCards({ carData }) {
           });
         }}
       >
+        {/* <Image src={noCar} width={50} height={50} alt="Car Image" /> */}
         <Image
-          src={carData["car"]["carImage"]["img1"]}
+          src={
+            carData["car"]["carImage"]["img1"] != null
+              ? carData["car"]["carImage"]["img1"]
+              : carData["car"]["carImage"]["img2"] != null
+              ? carData["car"]["carImage"]["img2"]
+              : noCar
+          }
           alt={carData["car"]["model"]}
           layout="fill"
           objectFit="cover"
@@ -130,9 +138,13 @@ function CarCards({ carData }) {
           <div className="flex m-2 ml-4">
             <Image
               src={
-                carData["car"]["power"] === "Gas" ? gas : 
-                carData["car"]["power"] === "Hybrid" ? hybrid :
-                carData["car"]["power"] === "Electric" ? electric : null
+                carData["car"]["power"] === "Gas"
+                  ? gas
+                  : carData["car"]["power"] === "Hybrid"
+                  ? hybrid
+                  : carData["car"]["power"] === "Electric"
+                  ? electric
+                  : gas
               }
               width={30}
               height={30}
