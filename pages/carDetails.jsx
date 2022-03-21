@@ -48,23 +48,19 @@ function carDetails() {
               className="text-2xl font-bold tracking-tight
                text-gray-900 sm:text-3xl sm:font-extrabold"
             >
-              {/* {roomObj.roomTitle} */}
+              This page's development is in progress.
             </h1>
           </div>
 
           {/* Image gallery */}
           <div className="flex flex-col m-2 md:flex-row justify-center align-middle text-center">
             <div className="m-2">
-              {/* <img
-                src={roomObj.roomImg}
-                alt="Room Image 1"
-                className="md:min-h-full xl:max-w-[600px] xl:max-h-[400px] rounded-md"
-              /> */}
+ 
             </div>
 
             <div className="m-2">
               <img
-                // src={roomObj.roomImg2}
+                
                 alt="Room Image 2"
                 className="md:min-h-full xl:max-w-[600px] xl:max-h-[400px] rounded-md"
               />
@@ -81,7 +77,7 @@ function carDetails() {
               sm:text-3xl sm:font-extrabold mb-3 font-bold"
             >
               <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
-                {/* {roomObj.roomLocation} */}
+                 
               </h1>
             </div>
 
@@ -97,30 +93,14 @@ function carDetails() {
                   </p>
                 </div>
                 <div className="flex justify-center mb-6">
-                  {/* <p className="text-3xl text-gray-900">{roomObj.roomPrice}</p> */}
+                   
                 </div>
 
                 {/* Reviews */}
                 <div className="mt-6 flex justify-center my-4">
                   <h3 className="sr-only">Reviews</h3>
                   <div className="flex items-center">
-                    {/* <div className="flex items-center">
-                      {[1, 2, 3, 4, 5].map((rating) => (
-                        <StarIcon
-                          key={rating}
-                          className={classNames(
-                            roomObj.roomStar >= rating
-                              ? "text-blue-500"
-                              : "text-gray-400",
-                            "h-5 w-5 flex-shrink-0"
-                          )}
-                          aria-hidden="true"
-                        />
-                      ))}
-                    </div>
-                    <p className="px-1 text-gray-700">
-                      {roomObj.roomStar} out of 5 stars
-                    </p> */}
+                    
                   </div>
                 </div>
               </div>
@@ -143,22 +123,12 @@ function carDetails() {
                       </td>
                     </tr>
                     <tr>
-                      {/* <td className="border p-2 border-gray-300">
-                        {formattedStartDate}
-                      </td>
-                      <td className="border p-2 border-gray-300">
-                        {formattedEndDate}
-                      </td> */}
+         
                     </tr>
                   </tbody>
                 </table>
 
-                {/* <div className="mt-3 flex justify-center my-2">
-                  <p className="text-xl text-gray-900">{`Number of Guest: ${numberOfGuest}`}</p>
-                </div>
-                <div className="mt-3 flex justify-center my-2">
-                  <p className="text-xl text-gray-900">{`Number of Day: ${numberOfDay}`}</p>
-                </div> */}
+       
               </div>
 
               {/* Info */}
@@ -170,14 +140,7 @@ function carDetails() {
                     </p>
                   </div>
                   <div className="flex items-center justify-between">
-                    {/* <h3 className="text-lg text-gray-900 font-medium">
-                      {`${dailyPrice.join("")} $ x ${numberOfDay} ${
-                        numberOfDay == 1 ? "night" : "nights"
-                      } `}
-                    </h3>
-                    <div className="text-lg font-medium text-black">
-                      {`${totalPrice} $`}
-                    </div> */}
+      
                   </div>
                 </div>
 
@@ -185,24 +148,7 @@ function carDetails() {
                   <hr className="border-gray-400 w-4/5" />
                 </div>
 
-                {/* <div>
-                  <div className="mt-3 flex justify-center my-2">
-                    <p className="text-3xl text-gray-900">{`Total: ${
-                      totalPrice + 10
-                    }$`}</p>
-                  </div>
-                  <div className="my-5 flex justify-center">
-                    <button
-                      onClick={handleBooking}
-                      className="w-5/6 bg-blue-500 border border-transparent 
-                  rounded-md py-3 px-8 flex items-center justify-center text-base 
-                  font-medium text-white hover:bg-blue-600 focus:outline-none 
-                  focus:ring-2 focus:ring-offset-2 focus:ring-black"
-                    >
-                      Reserve
-                    </button>
-                  </div>
-                </div> */}
+                
               </div>
             </div>
 
@@ -217,7 +163,7 @@ function carDetails() {
                     <HomeIcon className="h-7 w-7 mr-3" />
                     <div className="text-lg ">
                       {" "}
-                      {/* {roomObj.apartment} */}
+             
                       <p className="text-gray-600 text-sm">
                         {" "}
                         You'll have the apartment to yourself.{" "}
@@ -225,23 +171,18 @@ function carDetails() {
                     </div>
                   </div>
                   <div className="flex my-3">
-                    <ShieldCheckIcon className="h-7 w-7 mr-3" />
+                    {/* <ShieldCheckIcon className="h-7 w-7 mr-3" /> */}
                     <div className="text-lg ">
-                      {/* {roomObj.roomCheckIn} */}
+               
                       <p className="text-gray-600 text-sm">
                         Check yourself in with the lockbox.
                       </p>
                     </div>
                   </div>
                   <div className="flex my-3">
-                    <EmojiHappyIcon className="h-7 w-7 mr-3" />
+                    {/* <EmojiHappyIcon className="h-7 w-7 mr-3" /> */}
                     <div className="text-lg">
-                      {/* {roomObj.pet} */}
-                      {/* <p className="text-gray-600 text-sm">
-                        {roomObj.pet.indexOf("not") > 0
-                          ? "Pets are not allowed in this house."
-                          : "All kind of pets are allowed."}
-                      </p> */}
+ 
                     </div>
                   </div>
                 </div>
@@ -255,7 +196,7 @@ function carDetails() {
 
                 <div className="mt-6">
                   <p className="text-lg text-gray-900">
-                    {/* {roomObj.roomDescription} */}
+                   
                   </p>
                 </div>
               </div>
@@ -265,7 +206,7 @@ function carDetails() {
               className="flex justify-center align-middle 
                 lg:min-w-[600px] lg:min-h-[400px]"
             >
-              {/* <RoomMap long={roomObj.roomLong} lat={roomObj.roomLat} /> */}
+       
             </div>
           </div>
         </div>
