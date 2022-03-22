@@ -1,16 +1,23 @@
 import Nav from "../components/navbar/Nav";
 import Link from "next/link";
 import React, { useState } from "react";
-import { useRouter } from "next/dist/client/router";
 import emailjs from "emailjs-com";
 import Image from "next/image";
 import contactImg from "../public/images/contact.png";
 import { toast, ToastContainer } from "react-toastify";
+import { useAuth } from "../contexts/AuthContext";
+import { useCar } from "../contexts/CarContext";
+import { db } from "../firebase_config";
+//import { useRouter } from "next/dist/client/router";
 
 function contact() {
-  const router = useRouter();
   const [emailSent, setEmailSent] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const { user } = useAuth();
+  const [inputEmail, setInputEmail] = useState("");
+  const [inputName, setInputName] = useState("");
+  const [inputMsg, setInputMsg] = useState("");
+  const { notifySuccess } = useCar();
 
   function sendEmail(e) {
     e.preventDefault();
@@ -25,7 +32,30 @@ function contact() {
       .then(
         (result) => {
           console.log(result.text);
-          notifySuccess();
+          if (user) {
+            db.collection("contact")
+              .add({
+                userID: user.uid,
+                userEmail: user.email,
+                name: inputName,
+                message: inputMsg,
+              })
+              .catch((error) => {
+                console.error("Database Error:" + error);
+              });
+          } else {
+            db.collection("contact")
+              .add({
+                user: "non-member user",
+                name: inputName,
+                email: inputEmail,
+                message: inputMsg,
+              })
+              .catch((error) => {
+                console.error("Database Error:" + error);
+              });
+          }
+          notifySuccess(" We received your message.!");
         },
         (error) => {
           setErrorMessage("Something went wrong.Please try again later.");
@@ -38,17 +68,6 @@ function contact() {
 
     setEmailSent(!emailSent);
   }
-
-  const notifySuccess = () =>
-    toast.success(" We received your message.!", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
 
   const notifyError = () =>
     toast.info("Something went wrong!", {
@@ -88,7 +107,7 @@ function contact() {
               <div className="flex justify-center align-middle m-2">
                 <div className="w-2/3 ">
                   <div className="bg-blue-500 text-white font-bold rounded-t px-4 py-2">
-                   Something went wrong.
+                    Something went wrong.
                   </div>
                   <div
                     className="border border-t-0 border-blue-400 rounded-b 
@@ -122,6 +141,8 @@ function contact() {
                     Your Name
                   </div>
                   <input
+                    value={inputName}
+                    onChange={(e) => setInputName(e.target.value)}
                     className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-blue-300"
                     type="text"
                     placeholder="Your Name*"
@@ -134,6 +155,8 @@ function contact() {
                     Email Address
                   </div>
                   <input
+                    value={inputEmail}
+                    onChange={(e) => setInputEmail(e.target.value)}
                     className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-blue-300"
                     type="email"
                     placeholder="example@gmail.com*"
@@ -157,6 +180,8 @@ function contact() {
                     className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-blue-300"
                     required
                     rows="2"
+                    value={inputMsg}
+                    onChange={(e) => setInputMsg(e.target.value)}
                     minLength="6"
                     maxLength="200"
                     placeholder="Enter your message*"
@@ -205,7 +230,6 @@ function contact() {
         draggable
         pauseOnHover
       />
-
     </div>
   );
 }

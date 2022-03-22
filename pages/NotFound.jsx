@@ -13,14 +13,13 @@ export function CityButton({ city }) {
         onClick={() => {
           router.push({
             pathname: "/search",
-            // query: {
-            //   location: city,
-            //   startDate: new Date().toISOString(),
-            //   endDate: new Date(
-            //     new Date().valueOf() + 1000 * 3600 * 24
-            //   ).toISOString(),
-            //   numberOfGuest: 1,
-            // },
+            query: {
+              location: city,
+              startDate: new Date().toISOString(),
+              endDate: new Date(
+                new Date().valueOf() + 1000 * 3600 * 24
+              ).toISOString(),
+            },
           });
         }}
       >
@@ -101,12 +100,7 @@ function NotFound() {
               </div>
             </div>
             <div className="m-1 hidden md:flex justify-center align-center text-center">
-              <Image
-                src={notFound}
-                width={450}
-                height={600}
-                alt="NOT FOUND"          
-              />
+              <Image src={notFound} width={450} height={600} alt="NOT FOUND" />
             </div>
           </div>
         </div>

@@ -33,7 +33,7 @@ function carDetails() {
   var numberOfDay = differenceInTime / (1000 * 3600 * 24);
 
 
-  // TODO Fetch Room Data from DB 
+  // TODO Fetch Car Data from DB 
    
   return (
     <div>
@@ -61,7 +61,7 @@ function carDetails() {
             <div className="m-2">
               <img
                 
-                alt="Room Image 2"
+                alt="Car Image 2"
                 className="md:min-h-full xl:max-w-[600px] xl:max-h-[400px] rounded-md"
               />
             </div>
@@ -89,7 +89,7 @@ function carDetails() {
               <div>
                 <div className="mt-3 flex justify-center mb-5 ">
                   <p className="text-xl underline font-semibold text-blue-500">
-                    Room Details
+                    Car Details
                   </p>
                 </div>
                 <div className="flex justify-center mb-6">

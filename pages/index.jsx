@@ -1,8 +1,13 @@
 import Head from "next/head";
 import Footer from "../components/footer/Footer";
-import Nav from '../components/navbar/Nav'
+import Nav from "../components/navbar/Nav";
+import Banner from "../components/banner/Banner";
+import HowItWorks from "../components/about/HowItWorks";
+import About from "../components/about/About";
+import LocationSection from "../components/locations/LocationSection";
+import Link from "next/link";
 
-export default function Home() {
+export default function Home({ locationData }) {
   return (
     <div>
       <Head>
@@ -11,16 +16,21 @@ export default function Home() {
           name="description"
           content="Vehicle Network is a car renting system between users."
         />
-        <link rel="icon" href="/logo.jpg" />
-        {/* <link rel="preconnect" href="https://fonts.googleapis.com"/>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/> */}
+        <Link rel="preconnect" href="https://fonts.googleapis.com" />
+        <Link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <Link
+          href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+          rel="stylesheet"
+        />
       </Head>
 
-      <Nav /> 
+      <Nav />
 
-      <main className="max-w-7xl mx-auto px-8 sm:px-16">
- 
+      <main>
+        <Banner />
+        <HowItWorks />
+        <About />
+        <LocationSection locationData={locationData} />
       </main>
 
       <footer>
@@ -28,4 +38,20 @@ export default function Home() {
       </footer>
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  //Fetch location data
+  const locationData = await fetch("https://jsonkeeper.com/b/95S7")
+    .then((response) => response.json())
+    .catch((error) => {
+      console.log(error);
+    });
+
+ 
+  return {
+    props: {
+      locationData,
+    },
+  };
 }

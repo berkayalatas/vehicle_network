@@ -58,11 +58,7 @@ function ListCar() {
 
   /* Mapbox Access Token */
   mapboxgl.accessToken = process.env.mapbox_access_token;
-
-  /* Notification */
-  notifySuccess("Car successfully listed!")
-
-
+ 
   /* Mapbox geolocation and find user location, define marker here */
   useEffect(() => {
     if (map.current) return; // initialize map only once
@@ -163,7 +159,7 @@ function ListCar() {
     db.collection("cars")
       .add(newListing)
       .then(() => {
-        notifySuccess();
+        notifySuccess('Successfully added your car!');
         setTimeout(()=>{
           router.push("/auth/UserDashboard"); //redirect to the dashboard
         },2000)
@@ -360,6 +356,8 @@ function ListCar() {
                   type="number"
                   required
                   placeholder="4"
+                  min="2"
+                  max="6"
                   name="numberOfDoor"
                   value={numberOfDoor}
                   onChange={(event) => setNumberOfDoor(event.target.value)}
@@ -374,8 +372,8 @@ function ListCar() {
                     className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-blue-300"
                     type="number"
                     required
-                    min="2"
-                    max="4"
+                    min="1"
+                    max="10"
                     placeholder="4"
                     name="numberOfSeat"
                     value={numberOfSeat}
@@ -403,7 +401,7 @@ function ListCar() {
                 <option defaultValue="">Select Type of Power</option>
                 <option value="Gas">Gas</option>
                 <option value="Electric">Electric</option>
-                <option value="Hybrid ">Hybrid </option>
+                <option value="Hybrid ">Hybrid</option>
               </select>
             </div>
             <div className="mt-4">

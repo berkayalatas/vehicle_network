@@ -19,7 +19,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { useCar } from '../../contexts/CarContext';
+import { useCar } from "../../contexts/CarContext";
 //import { toast, ToastContainer } from "react-toastify";
 
 /* Mapbox Access Token */
@@ -29,7 +29,9 @@ function UpdateCar() {
   const router = useRouter();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const { timeStamptoDate, toTimestamp, timeConverter } = useCar();
+  const { timeStamptoDate, toTimestamp, timeConverter, notifySuccess } =
+    useCar();
+  //const [isLoading, setIsLoading] = useState(true);
   /* User */
   const [phoneNumber, setPhoneNumber] = useState("");
   const [drivingLicenceNo, setDrivingLicenceNo] = useState("");
@@ -73,7 +75,7 @@ function UpdateCar() {
   //     draggable: true,
   //     progress: undefined,
   //   });
-  
+
   /* Fetch Car Data */
   useEffect(() => {
     const fetchData = () => {
@@ -131,7 +133,6 @@ function UpdateCar() {
       });
   }, [car]);
 
- 
   /* Date Range DEFAULT: Previous selection */
   const dateRange = {
     startDate: timeStamptoDate(rentedFrom),
@@ -139,14 +140,12 @@ function UpdateCar() {
     key: "selection",
   };
 
-
   /* Handle Date Selection */
   const handleDatePicker = (ranges) => {
     setRentedFrom(toTimestamp(ranges.selection.startDate));
     setRentedTo(toTimestamp(ranges.selection.endDate));
   };
 
-  
   /* Mapbox geolocation and find user location, define marker here */
   useEffect(() => {
     if (map.current) return; // initialize map only once
@@ -423,6 +422,8 @@ function UpdateCar() {
                   type="number"
                   required
                   placeholder="4"
+                  min="2"
+                  max="6"
                   name="numberOfDoor"
                   value={numberOfDoor}
                   onChange={(event) => setNumberOfDoor(event.target.value)}
@@ -437,8 +438,8 @@ function UpdateCar() {
                     className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-blue-300"
                     type="number"
                     required
-                    min="2"
-                    max="4"
+                    min="1"
+                    max="10"
                     placeholder="4"
                     name="numberOfSeat"
                     value={numberOfSeat}
@@ -466,6 +467,7 @@ function UpdateCar() {
                 <option defaultValue="">Select Type of Power</option>
                 <option value="Gas">Gas</option>
                 <option value="Electric">Electric</option>
+                <option value="Hybrid ">Hybrid</option>
               </select>
             </div>
             <div className="mt-4">

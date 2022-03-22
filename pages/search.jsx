@@ -10,7 +10,8 @@ import Map from "../components/map/Map";
 import { ToastContainer } from "react-toastify";
 import Dropdown from "../components/dropdown/Dropdown";
 import { getCenter } from "geolib";
-import { useCar } from '../contexts/CarContext';
+import { useCar } from "../contexts/CarContext";
+
 function Search() {
   const router = useRouter();
   const { user } = useAuth();
@@ -18,7 +19,8 @@ function Search() {
   const [cars, setCars] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const { timeConverter, notifySuccess  } = useCar()  /* timestamp to date, Notification */
+  const { timeConverter, notifySuccess } =
+    useCar(); /* timestamp to date, Notification */
   //const [sortedData, setSortedData] = useState([]);
 
   //Format the date to human readable format
@@ -41,7 +43,7 @@ function Search() {
           const cars = data.docs.map((doc) => {
             return { id: doc.id, ...doc.data() };
           });
-          if (user.uid) {
+          //if (user.uid) { //check if user is logged in
             const filterByInput = cars?.filter(
               (theCar) =>
                 theCar.car.city.toLowerCase() == location.toLowerCase()
@@ -55,9 +57,9 @@ function Search() {
             setLoading(true);
             setCars(filterByDate);
             setLoading(false);
-          } else {
-            setCars(cars);
-          }
+          // } else {
+          //   setCars(cars);
+          // }
         })
         .catch((error) => {
           console.error("Failed to bring cars", error);
@@ -86,10 +88,8 @@ function Search() {
     longitude: data["car"]["location"]["lng"],
     latitude: data["car"]["location"]["lat"],
   }));
-  console.log(cordinates);
-  const center = getCenter(cordinates);
-  console.log(center);
 
+  const center = getCenter(cordinates);
 
   return (
     <div>
@@ -119,7 +119,7 @@ function Search() {
                 className="button"
                 onClick={() => {
                   filteredByPrice();
-                  notifySuccess("Cars successfully sorted!"); 
+                  notifySuccess("Cars successfully sorted!");
                 }}
               >
                 Car Price
@@ -128,7 +128,7 @@ function Search() {
                 className="button"
                 onClick={() => {
                   filteredByNumberOfSeat();
-                  notifySuccess("Cars successfully sorted!"); 
+                  notifySuccess("Cars successfully sorted!");
                 }}
               >
                 Number of Seat
@@ -171,7 +171,11 @@ function Search() {
             </div>
           </section>
           <section className="flex flex-wrap justify-center xl:min-w-[600px]">
-            <Map carData={!loading && cars} center={!loading && center} loading={loading} />
+            <Map
+              carData={!loading && cars}
+              center={!loading && center}
+              loading={loading}
+            />
           </section>
         </main>
       )}
