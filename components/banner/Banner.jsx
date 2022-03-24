@@ -35,19 +35,10 @@ function Banner() {
               rounded-full my-6 py-4 px-8 shadow-lg focus:shadow-outline transform transition
               hover:scale-105 duration-300 ease-in-out"
               onClick={() => {
-                router.push({
-                  pathname: "/search",
-                  query: {
-                    location: "paris",
-                    startDate: new Date().toISOString(),
-                    endDate: new Date(
-                      new Date().valueOf() + 1000 * 3600 * 24
-                    ).toISOString(),
-                  },
-                });
+                router.push('/auth/SignUpPage');
               }}
             >
-              Find your car
+              Let's start
             </button>
           </div>
 
