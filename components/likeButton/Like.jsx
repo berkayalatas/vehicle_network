@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import style from "../../styles/LikeBtn.module.css";
 import { toast } from "react-toastify";
-import { useCar } from '../../contexts/CarContext';
-
+import { useCar } from "../../contexts/CarContext";
+import { useAuth } from "../../contexts/AuthContext";
+import { useRouter } from "next/dist/client/router";
 function Like({
   active,
   setActive,
@@ -18,7 +19,8 @@ function Like({
   available,
 }) {
   const { notifySuccess } = useCar();
-
+  const { currentUser } = useAuth();
+  const router = useRouter();
   const notifyWarning = () =>
     toast.info("Removed from liked cars!", {
       position: "top-right",
@@ -31,21 +33,26 @@ function Like({
     });
 
   const toggleClass = () => {
-    setActive(!active);
-    active
-      ? removeFromLocalStorage(carID)
-      : addItemToStorage(
-          carID,
-          carImg,
-          brand,
-          model,
-          description,
-          price,
-          city,
-          startDate,
-          endDate,
-          available
-        );
+    /* Check if user is already logged in */
+    if (currentUser) {
+      setActive(!active);
+      active
+        ? removeFromLocalStorage(carID)
+        : addItemToStorage(
+            carID,
+            carImg,
+            brand,
+            model,
+            description,
+            price,
+            city,
+            startDate,
+            endDate,
+            available
+          );
+    } else {
+      router.push("/auth/LoginPage");
+    }
   };
 
   function addItemToStorage(

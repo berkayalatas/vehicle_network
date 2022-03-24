@@ -19,6 +19,9 @@ function Search() {
   const [cars, setCars] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [tempData, setTempData] = useState([]);
+  const [selected, setSelected] = useState("");
+
   const { timeConverter, notifySuccess } =
     useCar(); /* timestamp to date, Notification */
   //const [sortedData, setSortedData] = useState([]);
@@ -44,19 +47,19 @@ function Search() {
             return { id: doc.id, ...doc.data() };
           });
           //if (user.uid) { //check if user is logged in
-            const filterByInput = cars?.filter(
-              (theCar) =>
-                theCar.car.city.toLowerCase() == location.toLowerCase()
-            );
-            const filterByDate = filterByInput?.filter(
-              (car, key) =>
-                Date.parse(startDate) / 1000 >=
-                  car.reservationDetails["startDate"] &&
-                Date.parse(endDate) / 1000 <= car.reservationDetails["endDate"]
-            );
-            setLoading(true);
-            setCars(filterByDate);
-            setLoading(false);
+          const filterByInput = cars?.filter(
+            (theCar) => theCar.car.city.toLowerCase() == location?.toLowerCase()
+          );
+          const filterByDate = filterByInput?.filter(
+            (car, key) =>
+              Date.parse(startDate) / 1000 >=
+                car.reservationDetails["startDate"] &&
+              Date.parse(endDate) / 1000 <= car.reservationDetails["endDate"]
+          );
+          setLoading(true);
+          setCars(filterByDate);
+          setTempData(filterByDate);
+          setLoading(false);
           // } else {
           //   setCars(cars);
           // }
@@ -71,30 +74,39 @@ function Search() {
 
   /* Filtering according to price */
   function filteredByPrice() {
-    const sortedByPrice = cars.sort(
+    const sortedByPrice = tempData.sort(
       (a, b) => a.reservationDetails["price"] - b.reservationDetails["price"]
     );
     setCars([...sortedByPrice]);
   }
   /* Filtering according to number of seat */
   function filteredByNumberOfSeat() {
-    const sortedBySeatNumber = cars.sort(
+    const sortedBySeatNumber = tempData.sort(
       (a, b) => b.car["numberOfSeat"] - a.car["numberOfSeat"]
     );
     setCars([...sortedBySeatNumber]);
   }
 
+  function filteredByPower(power) {
+    const sortedByPower = tempData.filter((car) => car.car["power"] === power);
+    setCars([...sortedByPower]);
+  }
+
+  /* get longitude-latitude */
   var cordinates = cars.map((data) => ({
     longitude: data["car"]["location"]["lng"],
     latitude: data["car"]["location"]["lat"],
   }));
 
+  /* Get center lng and lat values of all cars */
   const center = getCenter(cordinates);
 
   return (
     <div>
       <Nav
-        placeholder={`${location.charAt(0).toUpperCase() + location.slice(1)} `}
+        placeholder={`${
+          location?.charAt(0).toUpperCase() + location?.slice(1)
+        } `}
       />
       {error ? (
         <Error error={error} />
@@ -105,10 +117,10 @@ function Search() {
               className="text-2xl text-blue-400 font-display font-semibold ml-4 mt-2 text-left xl:text-4xl
                     xl:text-bold"
             >
-              Cars in {location.charAt(0).toUpperCase() + location.slice(1)}
+              Cars in {location?.charAt(0).toUpperCase() + location?.slice(1)}
             </h2>
             <p className="text-md md:text-lg font-semibold m-3 pl-2 pb-2 text-gray-900 ">
-              {location.charAt(0).toUpperCase() + location.slice(1)}, {range}
+              {location?.charAt(0).toUpperCase() + location?.slice(1)}, {range}
             </p>
             <div
               className="flex pl-2 mb-5 space-x-3 
@@ -116,7 +128,7 @@ function Search() {
             >
               {/* TODO: Add filters here */}
               <button
-                className="button"
+                className="button text-sm sm:text-md"
                 onClick={() => {
                   filteredByPrice();
                   notifySuccess("Cars successfully sorted!");
@@ -125,7 +137,7 @@ function Search() {
                 Car Price
               </button>
               <button
-                className="button"
+                className="button text-sm sm:text-md"
                 onClick={() => {
                   filteredByNumberOfSeat();
                   notifySuccess("Cars successfully sorted!");
@@ -133,8 +145,20 @@ function Search() {
               >
                 Number of Seat
               </button>
-
-              <Dropdown cars={cars} setCars={setCars} />
+             
+             <Dropdown tempData={tempData} setCars={setCars}/>
+              {/* {["Gas", "Electric", "Hybrid"].map((power, key) => (
+                <button
+                  key={key}
+                  className="button text-sm sm:text-md"
+                  onClick={() => {
+                    filteredByPower(power);
+                    notifySuccess("Cars successfully sorted!");
+                  }}
+                >
+                  {power}
+                </button>
+              ))} */}
             </div>
             <div className="flex flex-col w-full">
               {cars?.map((car, key) => (

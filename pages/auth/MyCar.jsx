@@ -145,7 +145,7 @@ function MyCar() {
                               {timeConverter(
                                 car?.reservationDetails["startDate"]
                               )}{" "}
-                              to{" "}
+                              to {" "}
                               {timeConverter(
                                 car?.reservationDetails["endDate"]
                               )}

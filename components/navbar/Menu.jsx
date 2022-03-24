@@ -33,7 +33,7 @@ function Menu() {
       {currentUser ? (
         <div
           className="p-2 w-5 h-5 lg:w-9 lg:h-7 flex justify-center items-center 
-            rounded-full bg-blue-400 text-sm lg:text-lg text-white uppercase"
+            rounded-full bg-blue-400 text-sm lg:text-lg text-white capitalize"
         >
           {currentUser.displayName?.slice(0,2) || currentUser.email?.slice(0,2)}
         </div>

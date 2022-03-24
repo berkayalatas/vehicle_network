@@ -467,7 +467,7 @@ function UpdateCar() {
                 <option defaultValue="">Select Type of Power</option>
                 <option value="Gas">Gas</option>
                 <option value="Electric">Electric</option>
-                <option value="Hybrid ">Hybrid</option>
+                <option value="Hybrid">Hybrid</option>
               </select>
             </div>
             <div className="mt-4">

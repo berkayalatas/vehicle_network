@@ -17,7 +17,7 @@ function CarCards({ carData }) {
 
   /* Number of days between startDate and endDate*/
   const totalDay =
-    (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24) + 1;
+    (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24);
 
   const [toggleLike, setToggleLike] = useState(false);
 
@@ -114,7 +114,7 @@ function CarCards({ carData }) {
         <div className="pt-2 flex align-middle justify-start text-sm text-gray-500 flex-grow">
           <div
             className="p-2 mr-2 w-6 h-6 lg:w-8 lg:h-8 flex justify-center items-center 
-            rounded-full bg-blue-400 text-md text-white uppercase"
+            rounded-full bg-blue-400 text-md text-white capitalize"
           >
             {carData["user"]["userEmail"]?.slice(0, 2)}
           </div>

@@ -39,7 +39,7 @@ function LocationSection({ locationData }) {
                       src={city.image ? city.image : noCity}
                       alt={city.alt}
                       layout="fill"
-                      className="w-full h-full object-center object-cover  hover:scale-105 duration-200 ease-linear "
+                      className="w-full h-full object-center object-cover hover:scale-105 duration-200 ease-linear"
                     />
                   </div>
 

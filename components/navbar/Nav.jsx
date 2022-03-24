@@ -50,16 +50,16 @@ function Nav({ placeholder }) {
 
   const search = () => {
     /* Check if user authenticated */
-    if (currentUser) {
+    // if (currentUser) {
       /* search input validation */
-      if (searchInput.length > 2 && searchInput.charAt(0) != " ") {
+      if (searchInput?.length > 2 && searchInput?.charAt(0) != " ") {
         /* Date must be greater than today's date */
         if (startDate && endDate >= new Date()) {
           /* Check the cities */
           if (
-            searchInput.toLowerCase() === "berlin" ||
-            searchInput.toLowerCase() === "vienna" ||
-            searchInput.toLowerCase() === "paris"
+            searchInput?.toLowerCase() === "berlin" ||
+            searchInput?.toLowerCase() === "vienna" ||
+            searchInput?.toLowerCase() === "paris"
           ) {
             router.push({
               pathname: "/search",
@@ -83,10 +83,10 @@ function Nav({ placeholder }) {
         setOpen(true); // WARNING MODAL
         setWarningContent("Please enter a valid city.");
       }
-    } else {
-      setOpen(true); // WARNING MODAL
-      setWarningContent("Please sign in or register to continue.");
-    }
+    // } else {
+    //   setOpen(true); // WARNING MODAL
+    //   setWarningContent("Please sign in or register to continue.");
+    // }
   };
 
   return (
