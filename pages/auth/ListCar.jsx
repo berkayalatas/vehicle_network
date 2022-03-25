@@ -13,14 +13,21 @@ import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import { ToastContainer } from "react-toastify";
-import { v4 as uuidv4 } from 'uuid';
-import { useCar } from '../../contexts/CarContext';
+import { v4 as uuidv4 } from "uuid";
+import { useCar } from "../../contexts/CarContext";
+import { storage } from "../../firebase_config";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import delete_img from "../../public/logos/clearImg.png";
+import upload from "../../public/logos/upload.png";
+import Image from "next/image";
 
 function ListCar() {
   const router = useRouter();
-  const { user, currentUser } = useAuth();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const { notifySuccess } = useCar();
+  const [progress, setProgress] = useState("");
+  const [progress2, setProgress2] = useState("");
   /* User */
   const [phoneNumber, setPhoneNumber] = useState("");
   const [drivingLicenceNo, setDrivingLicenceNo] = useState("");
@@ -31,6 +38,8 @@ function ListCar() {
   const [model, setModel] = useState("");
   const [img1, setImg1] = useState("");
   const [img2, setImg2] = useState(null);
+  const [displayImg, setDisplayImg] = useState(null);
+  const [displayImg2, setDisplayImg2] = useState(null);
   const [carDescription, setCarDescription] = useState("");
   const [numberOfDoor, setNumberOfDoor] = useState("");
   const [numberOfSeat, setNumberOfSeat] = useState("");
@@ -58,7 +67,7 @@ function ListCar() {
 
   /* Mapbox Access Token */
   mapboxgl.accessToken = process.env.mapbox_access_token;
- 
+
   /* Mapbox geolocation and find user location, define marker here */
   useEffect(() => {
     if (map.current) return; // initialize map only once
@@ -112,6 +121,69 @@ function ListCar() {
     });
   }, []);
 
+  /* Date Picker function for selection */
+  const handleDatePicker = (ranges) => {
+    setStartDate(ranges.selection.startDate);
+    setEndDate(ranges.selection.endDate);
+  };
+
+  /* Images */
+
+  const handleUpload = (event) => {
+    //Display img functionality after uploading
+    if (event.target.files && event.target.files[0]) {
+      setDisplayImg(URL.createObjectURL(event.target.files[0]));
+    }
+    let fileRef = ref(storage, "userCars/" + event.target.files[0].name);
+    const uploadCar = uploadBytesResumable(fileRef, event.target.files[0]);
+
+    // Track the progress of uploading
+    uploadCar.on(
+      "state_changed",
+      (snapshot) => {
+        const fileProgress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgress(fileProgress);
+      },
+      (error) => {
+        console.log("Error:", error);
+      },
+      () => {
+        getDownloadURL(uploadCar.snapshot.ref).then((url) => {
+          console.log("File available at", url);
+          setImg1(url);
+        });
+      }
+    );
+  };
+  const handleUpload2 = (event) => {
+    //Display img functionality after uploading
+    if (event.target.files && event.target.files[0]) {
+      setDisplayImg2(URL.createObjectURL(event.target.files[0]));
+    }
+    let fileRef = ref(storage, "userCars/" + event.target.files[0].name);
+    const uploadCar = uploadBytesResumable(fileRef, event.target.files[0]);
+
+    // Track the progress of uploading
+    uploadCar.on(
+      "state_changed",
+      (snapshot) => {
+        const fileProgress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgress2(fileProgress);
+      },
+      (error) => {
+        console.log("Error:", error);
+      },
+      () => {
+        getDownloadURL(uploadCar.snapshot.ref).then((url) => {
+          console.log("File available at", url);
+          setImg2(url);
+        });
+      }
+    );
+  };
+
   /* Firebase Database JSON structure for car listing */
   const newListing = {
     user: {
@@ -147,26 +219,22 @@ function ListCar() {
     },
   };
 
-  /* Date Picker function for selection */
-  const handleDatePicker = (ranges) => {
-    setStartDate(ranges.selection.startDate);
-    setEndDate(ranges.selection.endDate);
-  };
-
   /* Save to Database if everything is okay*/
   function handleNewListing(event) {
+    setLoading(true);
     event.preventDefault();
     db.collection("cars")
       .add(newListing)
       .then(() => {
-        notifySuccess('Successfully added your car!');
-        setTimeout(()=>{
+        notifySuccess("Successfully added your car!");
+        setTimeout(() => {
           router.push("/auth/UserDashboard"); //redirect to the dashboard
-        },2000)
+        }, 2000);
       })
       .catch((error) => {
         console.log(error);
       });
+    setLoading(false);
   }
 
   return (
@@ -316,17 +384,114 @@ function ListCar() {
                   Car Image
                 </div>
               </div>
-              <input
-                className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-blue-300"
-                type="url"
-                required
-                placeholder="Image URL*"
-                name="img1"
-                value={img1}
-                onChange={(event) => setImg1(event.target.value)}
-              />
             </div>
-            <div className="mt-4">
+            <div className="m-1 flex flex-wrap">
+              <div className={style.img_area}>
+                <Image
+                  src={upload}
+                  style={{ display: displayImg ? "none" : "inline-block" }}
+                  alt="Add IMG"
+                  className={style.plus}
+                />
+                <input
+                  className="w-24 h-24 "
+                  type="file"
+                  required
+                  name="img1"
+                  //value={img1}
+                  onChange={handleUpload}
+                />
+                <div>
+                  <img
+                    src={displayImg}
+                    alt=""
+                    className={
+                      displayImg != null
+                        ? style.uploaded_img
+                        : style.not_uploaded
+                    }
+                  />
+                </div>
+              </div>
+              <div
+                className={
+                  displayImg === null
+                    ? style.delete_img_before
+                    : style.delete_img
+                }
+                onClick={() => {
+                  setDisplayImg(null);
+                }}
+              >
+                <Image src={delete_img} />
+              </div>
+
+              <div className={style.img_area}>
+                <Image
+                  src={upload}
+                  style={{ display: displayImg2 ? "none" : "inline-block" }}
+                  alt="Add IMG"
+                  className={style.plus}
+                />
+                <input
+                  className="w-24 h-24 "
+                  type="file"
+                  required
+                  name="img2"
+                  onChange={handleUpload2}
+                />
+                <div>
+                  <img
+                    src={displayImg2}
+                    alt=""
+                    className={
+                      displayImg2 != null
+                        ? style.uploaded_img
+                        : style.not_uploaded
+                    }
+                  />
+                </div>
+              </div>
+              <div
+                className={
+                  displayImg2 === null
+                    ? style.delete_img_before
+                    : style.delete_img
+                }
+                onClick={() => {
+                  setDisplayImg2(null);
+                }}
+              >
+                <Image src={delete_img} />
+              </div>
+
+              <div
+                className="w-full bg-gray-200 rounded-full dark:bg-gray-700"
+                style={{ display: progress == 0 ? "none" : "block" }}
+              >
+                <div
+                  className="bg-blue-400 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                  style={{ width: progress == "" ? 0 : `${progress}%` }}
+                >
+                  {" "}
+                  {parseFloat(progress).toFixed(1)}
+                </div>
+              </div>
+              <div
+                className="w-full mt-3 bg-gray-200 rounded-full dark:bg-gray-700"
+                style={{ display: progress2 == 0 ? "none" : "block" }}
+              >
+                <div
+                  className="bg-blue-400 text-xs font-medium text-gray-100 text-center p-0.5 leading-none rounded-full"
+                  style={{ width: progress2 == "" ? 0 : `${progress2}%` }}
+                >
+                  {" "}
+                  {parseFloat(progress2).toFixed(1)}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6">
               <div className="flex justify-between items-center">
                 <div className="lg:text-md font-bold text-gray-700 tracking-wide">
                   Car Description

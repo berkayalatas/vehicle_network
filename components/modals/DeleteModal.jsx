@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/dist/client/router";
 import style from "../../styles/Modal.module.css";
 import {
@@ -12,32 +12,40 @@ import {
 import { useAuth } from "../../contexts/AuthContext";
 import { db } from "../../firebase_config";
 import { ToastContainer } from "react-toastify";
-import { useCar } from '../../contexts/CarContext';
+import { useCar } from "../../contexts/CarContext";
 
 function DeleteModal({ setOpen, carID }) {
   const router = useRouter();
   const { user } = useAuth();
   const { notifySuccess } = useCar();
- 
+  const [loading, setLoading] = useState(false);
+
   async function handleDelete() {
-    const q = query(
-      collection(db, "cars"),
-      where("user.userID", "==", user.uid)
-    );
+    try {
+      setLoading(true);
+      const q = query(
+        collection(db, "cars"),
+        where("user.userID", "==", user.uid)
+      );
 
-    const querySnapshot = await getDocs(q);
-    var docID;
-    
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id);
-      const myData = doc.data();
-      if (myData["car"]["carID"] == carID) {
-        docID = doc.id;
-      }
-      //console.log("Document data:", doc.data());
-    });
+      const querySnapshot = await getDocs(q);
+      var docID;
 
-    await deleteDoc(doc(db, "cars", docID));
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id);
+        const myData = doc.data();
+        if (myData["car"]["carID"] == carID) {
+          docID = doc.id;
+        }
+        //console.log("Document data:", doc.data());
+      });
+
+      await deleteDoc(doc(db, "cars", docID));
+    } catch (err) {
+      console.error(err);
+    }
+
+    setLoading(false);
   }
 
   return (
@@ -55,13 +63,14 @@ function DeleteModal({ setOpen, carID }) {
           <div className={style.modalActions}>
             <div className={style.actionsContainer}>
               <button
+                disabled={loading}
                 className={style.deleteBtn}
                 onClick={() => {
                   handleDelete();
-                  notifySuccess("Car successfully deleted!")
-                  setTimeout(() =>{
+                  notifySuccess("Car successfully deleted!");
+                  setTimeout(() => {
                     router.push("/auth/UserDashboard");
-                  },2000)
+                  }, 2000);
                 }}
               >
                 Yes, Delete

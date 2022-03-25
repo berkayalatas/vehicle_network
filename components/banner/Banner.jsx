@@ -15,7 +15,7 @@ function Banner() {
           objectFit="cover"
           className="relative z-0"
         />
-        <div className="container relative px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
+        <div className="container relative px-3 mx-auto flex flex-wrap justify-center flex-col md:flex-row items-center">
           <div className="flex flex-col align-middle w-full md:w-2/5 justify-center items-start text-center lg:text-left">
             <p className="uppercase tracking-loose w-full">
               Explore the car sharing platform
@@ -42,7 +42,7 @@ function Banner() {
             </button>
           </div>
 
-          <div className="w-full md:w-3/5 py-2 text-center">
+          <div className="w-5/6 md:w-3/6 py-2 text-center">
             <Image
               className="rounded-2xl transform transition
               hover:scale-105 duration-300 ease-in-out"

@@ -12,6 +12,7 @@ import notfound from "../../public/images/notfound.png";
 import DeleteModal from "../../components/modals/DeleteModal";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import { useCar } from "../../contexts/CarContext";
+import noCar from "../../public/images/noCar.png";
 
 function MyCar() {
   const { user } = useAuth();
@@ -83,12 +84,28 @@ function MyCar() {
             {cars.length > 0 ? (
               cars.map((car, key) => (
                 <div key={key} className="w-full md:w-1/2 xl:w-1/3 px-4">
-                  <div className="bg-gray-50 hover:shadow-lg rounded-xl overflow-hidden mb-10 border-2">
-                    <img
-                      src={car?.car["carImage"]["img1"]}
-                      alt="image"
-                      className="w-full transform duration-200 hover:scale-110"
-                    />
+                  <div className="bg-gray-50 w-full hover:shadow-lg rounded-xl overflow-hidden mb-10 border-2">
+                    {car?.car["carImage"]["img1"] ||
+                    car?.car["carImage"]["img2"] ? (
+                      <img
+                        src={
+                          car?.car["carImage"]["img1"]
+                            ? car?.car["carImage"]["img1"]
+                            : car?.car["carImage"]["img2"]
+                        }
+                        alt="Car Image"
+                        className="w-full transform duration-200 hover:scale-110"
+                      />
+                    ) : (
+                      <div className="flex justify-center align-middle">
+                        <Image
+                          src={noCar}
+                          alt="Car Image"
+                          className="w-full transform duration-200 hover:scale-110"
+                        />
+                      </div>
+                    )}
+
                     <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
                       <h3>
                         <Link href="#">
@@ -145,7 +162,7 @@ function MyCar() {
                               {timeConverter(
                                 car?.reservationDetails["startDate"]
                               )}{" "}
-                              to {" "}
+                              to{" "}
                               {timeConverter(
                                 car?.reservationDetails["endDate"]
                               )}

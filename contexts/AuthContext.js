@@ -11,6 +11,7 @@ import { db } from "../firebase_config";
 import { updatePassword , updateEmail, updateProfile  } from "firebase/auth";
 import { useRouter } from "next/dist/client/router";
 
+
 const AuthContext = React.createContext('');
 
 export function useAuth() {
@@ -26,6 +27,7 @@ export function AuthProvider({ children }) {
   var [updateUsernameErrMsg, setUpdateUsernameErrMsg] = useState('');
 
   const user =  auth.currentUser;
+ 
 
   function signup(email, password) {
  
