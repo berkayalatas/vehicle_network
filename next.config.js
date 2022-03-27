@@ -1,7 +1,7 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ["localhost", 'source.unsplash.com', 'images.unsplash.com', 'img.icons8.com', 'icons8.com', 'cdn-icons-png.flaticon.com', 'cdn-icons.flaticon.com'],
+    domains: ["localhost", 'firebasestorage.googleapis.com','source.unsplash.com', 'images.unsplash.com', 'img.icons8.com', 'icons8.com', 'cdn-icons-png.flaticon.com', 'cdn-icons.flaticon.com'],
   },
   env: {
     mapbox_access_token: "pk.eyJ1IjoiYmVya2F5YWxhdGFzIiwiYSI6ImNrdWllN3oyaTAyaDYyeG1vYzh1eWczYmEifQ.AWmB4Q_-iG5CGZuyExH80g",

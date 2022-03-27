@@ -30,7 +30,24 @@ function Menu() {
       onClick={handleNavClick}
     >
       <MenuIcon className="h-4 w-4 lg:h-6 lg:w-6" />
-      {currentUser ? (
+      {currentUser && currentUser.photoURL ? (
+        <img
+          className="inline-block h-6 w-6 lg:h-7 lg:w-7 rounded-full ring-2 ring-blue-500"
+          src={currentUser.photoURL}
+          alt="User Avatar"
+        />
+      ) : currentUser && currentUser.photoURL == null ? (
+        <div
+          className="p-2 w-5 h-5 lg:w-9 lg:h-7 flex justify-center items-center 
+          rounded-full bg-blue-400 text-sm lg:text-lg text-white capitalize"
+        >
+          {currentUser.displayName?.slice(0, 2) ||
+            currentUser.email?.slice(0, 2)}
+        </div>
+      ) : (
+        <UserCircleIcon className="h-6 w-6 lg:h-7 lg:w-7 text-blue-400" />
+      )}
+      {/* {currentUser ? (
         <div
           className="p-2 w-5 h-5 lg:w-9 lg:h-7 flex justify-center items-center 
             rounded-full bg-blue-400 text-sm lg:text-lg text-white capitalize"
@@ -39,7 +56,7 @@ function Menu() {
         </div>
       ) : (
         <UserCircleIcon className="h-6 w-6 lg:h-7 lg:w-7 text-blue-400" />
-      )}
+      )} */}
 
       <div
         className={`${

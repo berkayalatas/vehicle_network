@@ -5,7 +5,7 @@ import { useRouter } from "next/dist/client/router";
 import Nav from "../../components/navbar/Nav";
 import Image from "next/image";
 import { db } from "../../firebase_config";
-import { CalendarIcon, UserGroupIcon } from "@heroicons/react/outline";
+import { CalendarIcon } from "@heroicons/react/outline";
 import upcoming from "../../public/images/calendar.png";
 import previous from "../../public/images/previous.png";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
@@ -15,67 +15,21 @@ function UserDashboard() {
   const router = useRouter();
   const { user } = useAuth();
   /* States */
-  const [room, setRoom] = useState([]);
- 
-  /* Fetch Data from database */
-  useEffect(() => {
-    const getInfo = () => {
-      const bookedRoom = db.collection("booking");
-      bookedRoom
-        .get()
-        .then((data) => {
-          if (data.size === 0) {
-            console.log("No Result");
-          }
-          const room = data.docs.map((doc) => {
-            return { id: doc.id, ...doc.data() };
-          });
-          if (user.uid) {
-            const filterRooms = room.filter(
-              (theRoom) => theRoom.user.userID === user.uid
-            );
-            setRoom(filterRooms);
-          } else {
-            setRoom(room);
-          }
-        })
-        .catch((error) => {
-          console.error("Failed to bring room", error);
-        });
-    };
-    getInfo();
-  }, []);
 
-  /* Filter upcoming travels */
-  const upcomingTravelsArr = room.filter(
-    (rm) =>
-      new Date(
-        rm.reservationDetails["endDate"].replace(
-          /(\d{2})-(\d{2})-(\d{4})/,
-          "$2/$1/$3"
-        )
-      ) >= new Date()
-  );
-
-  /* Filter previous travels */
-  const previousTravelsArr = room.filter(
-    (rm) =>
-      new Date(
-        rm.reservationDetails["endDate"].replace(
-          /(\d{2})-(\d{2})-(\d{4})/,
-          "$2/$1/$3"
-        )
-      ) <= new Date()
-  );
+  /* Filter upcomingRentals template */
+  // const upcomingRentals = car.filter(
+  //   (cr) =>
+  //     new Date(cr["endDate"].replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3")) >=
+  //     new Date()
+  // );
 
   return (
     <div>
       <Nav />
 
       <div className="flex justify-center mt-5">
-        <h2
-          className="text-3xl text-blue-400 font-display font-semibold lg:text-left xl:text-4xl
-                    xl:text-bold"
+        <h2 className="text-3xl text-blue-400 font-display font-semibold lg:text-left 
+          xl:text-4xl xl:text-bold"
         >
           User Dashboard
         </h2>
@@ -103,14 +57,14 @@ function UserDashboard() {
             </h3>
             {/* Filter upcoming travels filter expired travels */}
             <div className="mt-2 flex flex-col justify-evenly items-center">
-              {upcomingTravelsArr.length > 0 ? (
-                upcomingTravelsArr.map((r, key) => (
+              {[].length > 0 ? (
+                [].map((r, key) => (
                   <div key={key} className="w-11/12 sm:w-full py-4 px-2">
                     <div className="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden">
                       <div className="relative pb-48 overflow-hidden">
                         <img
                           className="absolute inset-0 h-full w-full object-cover"
-                          src={r.room["roomImg"]}
+                          src={r.car["carImg"]}
                           alt="Car Image"
                         />
                       </div>
@@ -119,13 +73,13 @@ function UserDashboard() {
                           {r.reservationDetails["city"]}
                         </span>
                         <h2 className="mt-2 mb-2 font-bold">
-                          {r.room["roomTitle"]}
+                          {r.car["carTitle"]}
                         </h2>
-                        <p className="text-sm">{r.room["roomDescription"]}</p>
+                        <p className="text-sm">{r.car["carDescription"]}</p>
                         <div className="mt-3 flex items-center">
                           <span className="font-bold text-xl">
                             {" "}
-                            {r.room["totalRoomPrice"]}
+                            {r.car["totalCarPrice"]}
                           </span>
                           &nbsp;
                           <span className="text-sm font-semibold">$</span>
@@ -144,10 +98,6 @@ function UserDashboard() {
                             </div>
                           </div>
                         </div>
-                        <span className="flex items-center">
-                          <UserGroupIcon className="h-6 w-6 m-2" />
-                          {r.reservationDetails["numberOfGuest"]}
-                        </span>
                       </div>
                       <div className="p-4 flex items-center text-sm text-gray-600">
                         <svg
@@ -157,7 +107,6 @@ function UserDashboard() {
                         >
                           <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
                         </svg>
-                        <span className="ml-2"> {r.room["roomStar"]}</span>
                       </div>
                     </div>
                   </div>
@@ -202,8 +151,8 @@ function UserDashboard() {
             {/* Filter previous travels filter expired travels */}
 
             <div className="mt-2 flex flex-col justify-evenly items-center">
-              {previousTravelsArr.length > 0 ? (
-                previousTravelsArr
+              {[].length > 0 ? (
+                []
                   .filter(
                     (rm) =>
                       new Date(
@@ -219,8 +168,8 @@ function UserDashboard() {
                         <div className="relative pb-48 overflow-hidden">
                           <img
                             className="absolute inset-0 h-full w-full object-cover"
-                            src={r.room["roomImg"]}
-                            alt="Booked Room Image"
+                            src={r.car["carImg"]}
+                            alt="Car Img"
                           />
                         </div>
 
@@ -229,13 +178,13 @@ function UserDashboard() {
                             {r.reservationDetails["city"]}
                           </span>
                           <h2 className="mt-2 mb-2 font-bold">
-                            {r.room["roomTitle"]}
+                            {r.car["carTitle"]}
                           </h2>
-                          <p className="text-sm">{r.room["roomDescription"]}</p>
+                          <p className="text-sm">{r.car["carDescription"]}</p>
                           <div className="mt-3 flex items-center">
                             <span className="font-bold text-xl">
                               {" "}
-                              {r.room["totalRoomPrice"]}
+                              {r.car["totalCarPrice"]}
                             </span>
                             &nbsp;
                             <span className="text-sm font-semibold">$</span>
@@ -254,10 +203,6 @@ function UserDashboard() {
                               </div>
                             </div>
                           </div>
-                          <span className="flex items-center">
-                            <UserGroupIcon className="h-6 w-6 m-2" />
-                            {r.reservationDetails["numberOfGuest"]}
-                          </span>
                         </div>
                         <div className="p-4 flex items-center text-sm text-gray-600">
                           <svg
@@ -267,13 +212,12 @@ function UserDashboard() {
                           >
                             <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
                           </svg>
-                          <span className="ml-2"> {r.room["roomStar"]}</span>
                         </div>
                       </div>
                     </div>
                   ))
               ) : (
-                <div className=" flex flex-col justify-center align-middle text-center my-2">
+                <div className="flex flex-col justify-center align-middle text-center my-2">
                   <Image
                     src={previous}
                     width={200}

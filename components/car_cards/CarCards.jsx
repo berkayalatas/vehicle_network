@@ -9,10 +9,11 @@ import hybrid from "../../public/logos/hybrid.png";
 import Like from "../../components/likeButton/Like";
 import { ToastContainer } from "react-toastify";
 import noCar from "../../public/images/noCar.png";
+import { useAuth } from "../../contexts/AuthContext";
 
 function CarCards({ carData }) {
   const router = useRouter();
-
+  const { currentUser } = useAuth();
   const { startDate, endDate } = router.query;
 
   /* Number of days between startDate and endDate*/
@@ -37,7 +38,6 @@ function CarCards({ carData }) {
     };
     handleLikeClick();
   }, []);
-
 
   return (
     <div
@@ -109,15 +109,24 @@ function CarCards({ carData }) {
           />
         </div>
 
-        <div className="border-b w-10 p-2" />
-
+        <div className="border-b w-10 p-2" />   
         <div className="pt-2 flex align-middle justify-start text-sm text-gray-500 flex-grow">
-          <div
-            className="p-2 mr-2 w-6 h-6 lg:w-8 lg:h-8 flex justify-center items-center 
+          {carData["user"]["userPhoto"] != null ||
+          carData["user"]["userPhoto"] != undefined ? (
+            <img
+              className="inline-block mr-2 h-6 w-6 lg:h-7 lg:w-7 rounded-full ring-1 ring-blue-500"
+              src={carData["user"]["userPhoto"]}
+              alt="IMG"
+            />
+          ) : (
+            <div
+              className="p-2 mr-2 w-6 h-6 lg:w-8 lg:h-8 flex justify-center items-center 
             rounded-full bg-blue-400 text-md text-white capitalize"
-          >
-            {carData["user"]["userEmail"]?.slice(0, 2)}
-          </div>
+            >
+              {carData["user"]["userEmail"]?.slice(0, 2)}
+            </div>
+          )}
+
           <div>{carData["car"]["carDescription"]}</div>
         </div>
 
@@ -143,8 +152,8 @@ function CarCards({ carData }) {
                   ? hybrid
                   : carData["car"]["power"] === "Electric"
                   ? electric
-                  : carData["car"]["power"] === "" 
-                  ? gas 
+                  : carData["car"]["power"] === ""
+                  ? gas
                   : gas
               }
               width={30}

@@ -81,3 +81,10 @@
 .delete_img_before {
     display: none;
 }
+
+.fileInput
+{
+    text-indent: -999em;
+    outline: none;
+    position: absolute;
+}

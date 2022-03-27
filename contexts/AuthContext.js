@@ -1,14 +1,11 @@
 import React, { useContext, useState, useEffect } from "react"
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-  sendPasswordResetEmail
+  createUserWithEmailAndPassword,signInWithEmailAndPassword,
+  onAuthStateChanged, signOut, sendPasswordResetEmail,updatePassword,
+  updateEmail, updateProfile 
 } from "firebase/auth";
 import { auth } from "../firebase_config";
 import { db } from "../firebase_config";
-import { updatePassword , updateEmail, updateProfile  } from "firebase/auth";
 import { useRouter } from "next/dist/client/router";
 
 
@@ -86,10 +83,8 @@ export function AuthProvider({ children }) {
   function updateUsername(name) {
     updateProfile(auth.currentUser, {
       displayName: name, 
-      //photoURL: photoURL
     }).then(() => {
-      // Profile updated!
-      // ...
+      console.log('Successful');
     }).catch((error) => {
       setUpdateUsernameErrMsg(error.message)
       console.log(error.message);
@@ -102,6 +97,17 @@ export function AuthProvider({ children }) {
 
   function updateUserPassword(password) {
     return updatePassword(auth.currentUser, password)
+  }
+
+  async function updateProfilePic(photoURL) {
+    try {
+      await updateProfile(auth.currentUser, {
+        photoURL: photoURL
+      });
+      console.log('Successfully updated profile picture');
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -131,6 +137,7 @@ export function AuthProvider({ children }) {
     signup,
     logout,
     resetPassword,
+    updateProfilePic,
     updateUserEmail,
     updateUserPassword,
     updateUsername,

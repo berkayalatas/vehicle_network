@@ -457,10 +457,15 @@ function UpdateCar() {
                   className={style.plus}
                 />
                 <input
-                  className="w-24 h-24 "
+                  className="w-24 h-24"
                   type="file"
                   name="img1"
                   onChange={handleUpload}
+                  style={{
+                    textIndent: "-999em",
+                    outline: "none",
+                    position: "absolute",
+                  }}
                 />
                 <div>
                   <img
@@ -498,6 +503,11 @@ function UpdateCar() {
                   className="w-24 h-24 "
                   type="file"
                   name="img2"
+                  style={{
+                    textIndent: "-999em",
+                    outline: "none",
+                    position: "absolute",
+                  }}
                   onChange={handleUpload2}
                 />
                 <div>

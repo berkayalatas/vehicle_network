@@ -189,6 +189,7 @@ function ListCar() {
     user: {
       userID: user.uid,
       userEmail: user.email,
+      userPhoto: user.photoURL,
       phoneNumber: phoneNumber,
       drivingLicenceNo: drivingLicenceNo,
       roomNo: roomNo, // TODO: chat application integration
@@ -399,6 +400,11 @@ function ListCar() {
                   required
                   name="img1"
                   //value={img1}
+                  style={{
+                    textIndent: "-999em",
+                    outline: "none",
+                    position: "absolute",
+                  }}
                   onChange={handleUpload}
                 />
                 <div>
@@ -438,6 +444,11 @@ function ListCar() {
                   type="file"
                   required
                   name="img2"
+                  style={{
+                    textIndent: "-999em",
+                    outline: "none",
+                    position: "absolute",
+                  }}
                   onChange={handleUpload2}
                 />
                 <div>
