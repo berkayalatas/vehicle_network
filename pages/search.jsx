@@ -147,18 +147,6 @@ function Search() {
               </button>
              
              <Dropdown tempData={tempData} setCars={setCars}/>
-              {/* {["Gas", "Electric", "Hybrid"].map((power, key) => (
-                <button
-                  key={key}
-                  className="button text-sm sm:text-md"
-                  onClick={() => {
-                    filteredByPower(power);
-                    notifySuccess("Cars successfully sorted!");
-                  }}
-                >
-                  {power}
-                </button>
-              ))} */}
             </div>
             <div className="flex flex-col w-full">
               {cars?.map((car, key) => (

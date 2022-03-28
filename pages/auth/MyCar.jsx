@@ -108,9 +108,8 @@ function MyCar() {
 
                     <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
                       <h3>
-                        <Link href="#">
-                          <p
-                            className="
+                        <p
+                          className="
                             font-semibold
                             text-dark text-xl
                             sm:text-[22px]
@@ -119,13 +118,11 @@ function MyCar() {
                             xl:text-xl
                             2xl:text-[22px]
                             mb-4
-                            block
-                            cursor-pointer                    
+                            block                              
                             "
-                          >
-                            {car?.car["brand"]} {car?.car["model"]}
-                          </p>
-                        </Link>
+                        >
+                          {car?.car["brand"]} {car?.car["model"]}
+                        </p>
                       </h3>
                       <p className="text-base text-body-color leading-relaxed mb-7">
                         {car?.car["carDescription"]}

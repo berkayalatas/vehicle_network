@@ -13,7 +13,7 @@ import UpdateUser from "../../components/updateUser/UpdateUser";
 
 function UserDashboard() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { currentUser } = useAuth();
   /* States */
 
   /* Filter upcomingRentals template */
@@ -46,7 +46,7 @@ function UserDashboard() {
 
       <div className="flex flex-col justify-center mt-4">
         <UpdateUser />
-
+ 
         <div className="mt-2 flex justify-evenly flex-col md:flex-row mb-5">
           <div className="mt-10 flex flex-col justify-start">
             <h3

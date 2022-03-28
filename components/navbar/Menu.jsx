@@ -29,10 +29,10 @@ function Menu() {
       className={`flex items-center space-x-3 border-2 px-1 py-1.5 md:px-2 rounded-full active:bg-gray-100 hover:bg-gray-100 cursor-pointer`}
       onClick={handleNavClick}
     >
-      <MenuIcon className="h-4 w-4 lg:h-6 lg:w-6" />
+      <MenuIcon className="h-6 w-6 lg:h-6 lg:w-6" />
       {currentUser && currentUser.photoURL ? (
         <img
-          className="inline-block h-6 w-6 lg:h-7 lg:w-7 rounded-full ring-2 ring-blue-500"
+          className="inline-block h-5 w-5 lg:h-7 lg:w-7 rounded-full ring-2 ring-blue-500"
           src={currentUser.photoURL}
           alt="User Avatar"
         />

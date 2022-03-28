@@ -22,8 +22,8 @@ export default function Dropdown({ tempData, setCars }) {
         filteredByPower(e.target.value);
         notifySuccess("Cars successfully filtered!");
       }}
-      className="w-32 text-lg py-2 border-2 border-blue-100  focus:border-blue-200
-  focus:ring-blue-500 h-full pl-2 pr-7 bg-transparent text-gray-500 sm:text-sm rounded-full"
+      className="w-32 text-sm py-2 border-2 border-blue-100  focus:border-blue-200
+  focus:ring-blue-500 h-full pl-1 sm:pl-2 pr-2 sm:pr-7 bg-transparent text-gray-600 sm:text-md rounded-full"
     >
       <option defaultValue disabled value="">
         Power Type

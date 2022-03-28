@@ -6,7 +6,7 @@ import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { useCar } from "../../contexts/CarContext";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/dist/client/router";
-import style from "../../styles/InputBtn.module.css";
+
 function UpdateUser() {
   const router = useRouter();
   const { currentUser, updateProfilePic } = useAuth();
@@ -74,7 +74,7 @@ function UpdateUser() {
           <input
             type="file"
             style={{
-              width: "200px",
+              width: "230px",
             }}
             className="border border-gray-600 text-gray-700 p-2 rounded-xl text-sm 
                       font-semibold font-display focus:outline-none focus:shadow-outline
