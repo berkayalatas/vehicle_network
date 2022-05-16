@@ -18,7 +18,7 @@ function About() {
 
         <div className="flex flex-wrap">
           <div className="w-5/6 sm:w-1/2 p-6">
-            <h3 className="text-3xl text-center text-gray-800 font-bold leading-none mb-3">
+            <h3 className="text-3xl text-gray-800 font-bold leading-none mb-3">
                 Getting started
             </h3>
             <p className="text-gray-600 mb-8 text-lg">

@@ -1,29 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
-import Nav from "../components/navbar/Nav";
-import { useAuth } from "../contexts/AuthContext";
-import { useCar } from "../contexts/CarContext";
-import Error from "../components/errors/Error";
-import { db } from "../firebase_config";
+import Nav from "../../components/navbar/Nav";
+import { useAuth } from "../../contexts/AuthContext";
+import { useCar } from "../../contexts/CarContext";
+import Error from "../../components/errors/Error";
+import { db } from "../../firebase_config";
 import Image from "next/image";
-import noCar from "../public/images/noCar.png";
-import seat from "../public/logos/seat.png";
-import carDoor from "../public/logos/car-door.png";
-import gas from "../public/logos/gas.png";
-import hybrid from "../public/logos/hybrid.png";
-import electric from "../public/logos/electric.png";
-import CarMap from "../components/map/CarMap";
+import noCar from "../../public/images/noCar.png";
+import seat from "../../public/logos/seat.png";
+import carDoor from "../../public/logos/car-door.png";
+import gas from "../../public/logos/gas.png";
+import hybrid from "../../public/logos/hybrid.png";
+import electric from "../../public/logos/electric.png";
+import CarMap from "../../components/map/CarMap";
 import { getCenter } from "geolib";
-function carDetails() {
+
+function MyCarDetails() {
   const router = useRouter();
   const { currentUser } = useAuth();
   const [car, setCar] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   //ES6 Destructing
-  const { location, carID, startDate, endDate, lng, lat } = router.query;
+  const { location, carID, brand, lng, lat, startDate, endDate, price } =
+    router.query;
   const { timeConverter, timeStamptoDate } = useCar();
- 
+
   const formattedStartDate = timeConverter(startDate);
   const formattedEndDate = timeConverter(endDate);
 
@@ -33,15 +35,15 @@ function carDetails() {
   // To calculate the number of days between two dates
   var numberOfDay = differenceInTime / (1000 * 3600 * 24) + 1;
 
-  // FETCH THE CAR DATA WHEN WE OPEN CAR DETAILS PAGE
+  // FETCH THE CAR DATA WHEN WE OPEN MYCAR DETAILS PAGE
   useEffect(() => {
     async function getTheCarInfo() {
-      const myCars = db.collection("cars");
-      myCars
+      const myCar = db.collection("cars");
+      myCar
         .get()
         .then((data) => {
           if (data.size === 0) {
-            console.log("Cars not found.");
+            console.log("Car not found.");
           }
           const cars = data.docs.map((doc) => {
             return { id: doc.id, ...doc.data() };
@@ -62,6 +64,8 @@ function carDetails() {
     getTheCarInfo();
   }, []);
 
+  !loading && console.log(car);
+
   /* get longitude-latitude */
   var cordinates = car.map((data) => ({
     longitude: data["car"]["location"]["lng"],
@@ -70,27 +74,6 @@ function carDetails() {
 
   /* Get center lng and lat values of all cars */
   const center = getCenter(cordinates);
-
-  !loading && console.log(car);
-
-  //save car info to localStorage if user is not logged in then redirect to signup page
-  const handleRent = () => {
-    if (currentUser) {
-      !loading &&
-        window.localStorage.setItem("reservation", JSON.stringify(car));
-      router.push({
-        pathname: "/payment",
-        query: {
-          city: location,
-          carID: carID,
-          startDate: startDate,
-          endDate: endDate,
-        },
-      });
-    } else {
-      router.push("/auth/SignUpPage");
-    }
-  };
 
   return (
     <>
@@ -217,97 +200,19 @@ function carDetails() {
                             </span>
                           </p>
                         </div>
-                        {/* Reviews */}
-                        <div className="mt-6 flex justify-center my-4">
-                          <h3 className="sr-only">Reviews</h3>
-                          <div className="flex items-center"></div>
-                        </div>
                       </div>
 
                       <div className="flex flex-col justify-center">
-                        <div className="mt-3 flex justify-center mb-5">
-                          <p className="text-xl underline font-semibold text-blue-500">
-                            Booking Details
-                          </p>
-                        </div>
-                        {/* Date Table */}
-                        <table className="border-separate border-gray-400 p-2 m-2 text-lg text-gray-900">
-                          <tbody>
-                            <tr>
-                              <td className="border p-2 font-semibold border-gray-300">
-                                Check-In
-                              </td>
-                              <td className="border p-2 font-semibold border-gray-300">
-                                CheckOut
-                              </td>
-                            </tr>
-                            <tr>
-                              <td className="border p-2 border-gray-300">
-                                {formattedStartDate}
-                              </td>
-                              <td className="border p-2 border-gray-300">
-                                {formattedEndDate}
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-
-                      {/* Info */}
-                      <div>
-                        <div className="mt-8 mx-3">
-                          <div className="mt-3 flex justify-center mb-5">
-                            <p className="text-xl underline font-semibold text-blue-500">
-                              Summary
-                            </p>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <h3 className="text-lg md:text-xl  text-gray-900 font-medium">
-                              {`${
-                                car[0]?.reservationDetails["price"]
-                              } € x ${numberOfDay} ${
-                                numberOfDay == 1 ? "night" : "nights"
-                              } `}
-                            </h3>
-                            <div className="text-xl md:text-2xl  font-semibold text-black">
-                              {`${
-                                numberOfDay *
-                                car[0]?.reservationDetails["price"]
-                              } €`}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex justify-center align-center text-center my-4">
-                          <hr className="border-gray-400 w-4/5" />
-                        </div>
-                        <div className="my-5 flex justify-center">
-                          {!currentUser ||
-                          currentUser.uid != car[0]?.user["userID"] ? (
-                            <button
-                              onClick={handleRent}
-                              className="w-8/12 bg-blue-500 border border-transparent 
-                              rounded-md py-3 px-8 flex items-center justify-center
-                              text-lg md:text-xl text-white hover:bg-blue-600 focus:outline-none 
-                              focus:ring-1 focus:ring-offset-1 focus:ring-black mt-3"
-                            >
-                              Rent Now
-                            </button>
-                          ) : (
-                            <div
-                              className="flex items-center rounded-md bg-blue-400 text-white text-sm font-bold px-4 py-3"
-                              role="alert"
-                            >
-                              <svg
-                                className="fill-current w-4 h-4 mr-2"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 20 20"
-                              >
-                                <path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z" />
-                              </svg>
-                              <p> This is your car. </p>
-                            </div>
-                          )}
+                        <div
+                          className="flex justify-center align-middle 
+                                xl:min-w-[350px] xl:min-h-[400px] m-1 rounded-ml"
+                        >
+                          <CarMap
+                            lng={lng}
+                            lat={lat}
+                            loading={loading}
+                            center={center}
+                          />
                         </div>
                       </div>
                     </div>
@@ -508,19 +413,6 @@ function carDetails() {
                         </div>
                       </div>
                     </div>
-
-                    <div
-                      className="flex justify-center align-middle 
-                      lg:min-w-[600px] lg:min-h-[400px]"
-                    >
-             
-                      <CarMap
-                        lng={lng}
-                        lat={lat}
-                        loading={loading}
-                        center={center}
-                      />
-                    </div>
                   </div>
                 </>
               )}
@@ -532,4 +424,4 @@ function carDetails() {
   );
 }
 
-export default carDetails;
+export default MyCarDetails;

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/dist/client/router";
 import { useAuth } from "../../contexts/AuthContext";
 import Nav from "../../components/navbar/Nav";

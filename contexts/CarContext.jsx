@@ -38,7 +38,6 @@ export function CarProvider({ children }) {
     return date;
   };
 
-  /* using timestamp generate a car id */
   function toTimestamp(strDate) {
     var datum = Date.parse(strDate);
     return datum / 1000;

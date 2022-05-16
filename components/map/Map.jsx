@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
-import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import ReactMapGL, {
+  Marker,
+  Popup,
+  GeolocateControl,
+  FullscreenControl,
+  NavigationControl,
+  ScaleControl,
+} from "react-map-gl";
 import Image from "next/image";
-import { getCenter } from "geolib";
 import MapCard from "./MapCard";
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
+import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import carImg from "../../public/images/car.png";
 
 mapboxgl.accessToken = process.env.mapbox_access_token;
@@ -17,6 +24,7 @@ function Map({ carData, loading, center }) {
     longitude: center?.longitude,
     latitude: center?.latitude,
   });
+
   return (
     <>
       {!loading && (
@@ -26,10 +34,15 @@ function Map({ carData, loading, center }) {
           initialViewState={{
             longitude: center?.longitude,
             latitude: center?.latitude,
-            zoom: 10
+            zoom: 10,
           }}
           onMove={(nextViewport) => setViewport(nextViewport.viewState)} // movement on the map
         >
+          <ScaleControl position="top-left" />
+          <FullscreenControl position="top-left" />
+          <GeolocateControl />
+          <NavigationControl />
+
           {carData?.map((marker, key) => (
             <div key={key}>
               <Marker

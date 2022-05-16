@@ -210,7 +210,7 @@ function ListCar() {
       carDescription: carDescription,
       numberOfDoor: numberOfDoor,
       numberOfSeat: numberOfSeat,
-      power: power, //gas or electric
+      power: power, //gas or electric or hybrid
       available: available,
     },
     reservationDetails: {

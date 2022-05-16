@@ -3,7 +3,7 @@ import Link from "next/link";
 
 function Breadcrumb({ title1, title2, title3, href1, href2, href3 }) {
   return (
-    <div className="flex align-middle justify-center text-center mt-5">
+    <div className="flex align-middle text-sm md:text-base justify-center text-center mt-5">
       <nav
         className="bg-blue-50 text-gray-700 border border-blue-200 py-3 px-5 rounded-lg"
         aria-label="Breadcrumb"

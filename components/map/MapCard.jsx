@@ -24,7 +24,7 @@ function MapCard({ carImg, description, model, brand, price }) {
 
       <div className="w-full flex flex-col">
         <div className="pl-2 pb-0 flex-1">
-          <div className="text-lg font-bold mt-1 text-gray-700  flex items-center mb-2">
+          <div className="text-lg font-bold mt-1 text-blue-500  flex items-center mb-2">
             {brand + " " + model}
           </div>
           <p className="text-lg text-gray-700 ">

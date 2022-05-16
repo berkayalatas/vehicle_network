@@ -10,12 +10,12 @@ import Like from "../../components/likeButton/Like";
 import { ToastContainer } from "react-toastify";
 import noCar from "../../public/images/noCar.png";
 import { useAuth } from "../../contexts/AuthContext";
+import { useCar } from "../../contexts/CarContext";
 
 function CarCards({ carData }) {
   const router = useRouter();
-  const { currentUser } = useAuth();
   const { startDate, endDate } = router.query;
-
+  const { toTimestamp } = useCar();
   /* Number of days between startDate and endDate*/
   const totalDay =
     (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24);
@@ -52,8 +52,10 @@ function CarCards({ carData }) {
             query: {
               location: carData["car"]["city"],
               carID: carData["car"]["carID"],
-              startDate: carData["reservationDetails"]["startDate"],
-              endDate: carData["reservationDetails"]["endDate"],
+              startDate: toTimestamp(startDate),
+              endDate: toTimestamp(endDate),
+              lng: carData['car']["location"]["lng"],
+              lat: carData['car']["location"]["lat"],
             },
           });
         }}
@@ -84,8 +86,10 @@ function CarCards({ carData }) {
                 query: {
                   location: carData["car"]["city"],
                   carID: carData["car"]["carID"],
-                  startDate: carData["reservationDetails"]["startDate"],
-                  endDate: carData["reservationDetails"]["endDate"],
+                  startDate: toTimestamp(startDate),
+                  endDate: toTimestamp(endDate),
+                  lng: carData['car']["location"]["lng"],
+                  lat: carData['car']["location"]["lat"],
                 },
               });
             }}
@@ -109,7 +113,7 @@ function CarCards({ carData }) {
           />
         </div>
 
-        <div className="border-b w-10 p-2" />   
+        <div className="border-b w-10 p-2" />
         <div className="pt-2 flex align-middle justify-start text-sm text-gray-500 flex-grow">
           {carData["user"]["userPhoto"] != null ||
           carData["user"]["userPhoto"] != undefined ? (
@@ -127,7 +131,11 @@ function CarCards({ carData }) {
             </div>
           )}
 
-          <div>{carData["car"]["carDescription"]}</div>
+          <div>
+            {carData["car"]["carDescription"].length > 250
+              ? carData["car"]["carDescription"].substring(0, 250).concat("...")
+              : carData["car"]["carDescription"]}
+          </div>
         </div>
 
         <div className="flex my-2">

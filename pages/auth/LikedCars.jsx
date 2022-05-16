@@ -117,7 +117,7 @@ function MyCar() {
                         {car?.description}
                       </p>
                       <div className="p-4 border-t text-sm text-gray-800 flex flex-col justify-around">
-                        <div className="flex flex-col items-center align-center">
+                        <div className="flex flex-col items-left align-center">
                           <div className="flex flex-row m-1">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"

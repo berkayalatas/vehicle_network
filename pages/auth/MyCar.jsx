@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import Image from "next/image";
 import PrivateRoute from "../PrivateRoute";
-import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
 import Nav from "../../components/navbar/Nav";
 import { db } from "../../firebase_config";
@@ -94,7 +93,22 @@ function MyCar() {
                             : car?.car["carImage"]["img2"]
                         }
                         alt="Car Image"
-                        className="w-full transform duration-200 hover:scale-110"
+                        className="w-full cursor-pointer transform duration-200 hover:scale-110"
+                        onClick={() => {
+                          router.push({
+                            pathname: "/auth/MyCarDetails",
+                            query: {
+                              city: car?.car["city"],
+                              carID: car?.car["carID"],
+                              brand: car?.car["brand"],
+                              lng: car?.car["location"]["lng"],
+                              lat: car?.car["location"]["lat"],
+                              startDate: car?.reservationDetails["startDate"],
+                              endDate: car?.reservationDetails["endDate"],
+                              price: car?.reservationDetails["price"],
+                            },
+                          });
+                        }}
                       />
                     ) : (
                       <div className="flex justify-center align-middle">
@@ -107,7 +121,24 @@ function MyCar() {
                     )}
 
                     <div className="p-8 sm:p-9 md:p-7 xl:p-9 text-center">
-                      <h3>
+                      <h3
+                        onClick={() => {
+                          router.push({
+                            pathname: "/auth/MyCarDetails",
+                            query: {
+                              city: car?.car["city"],
+                              carID: car?.car["carID"],
+                              brand: car?.car["brand"],
+                              lng: car?.car["location"]["lng"],
+                              lat: car?.car["location"]["lat"],
+                              startDate: car?.reservationDetails["startDate"],
+                              endDate: car?.reservationDetails["endDate"],
+                              price: car?.reservationDetails["price"],
+                            },
+                          });
+                        }}
+                        className="cursor-pointer"
+                      >
                         <p
                           className="
                             font-semibold
@@ -125,7 +156,11 @@ function MyCar() {
                         </p>
                       </h3>
                       <p className="text-base text-body-color leading-relaxed mb-7">
-                        {car?.car["carDescription"]}
+                        {car?.car["carDescription"].length > 250
+                          ? car?.car["carDescription"]
+                              .substring(0, 250)
+                              .concat("...")
+                          : car?.car["carDescription"]}
                       </p>
                       <div className="p-4 border-t text-sm text-gray-800 flex flex-col justify-around">
                         <div className="flex items-center">
@@ -192,7 +227,14 @@ function MyCar() {
                         </div>
                         <div>
                           <button
-                            onClick={() => setOpen(true)}
+                            onClick={() => {
+                              setOpen(true);
+                              router.push({
+                                query: {
+                                  carID: car?.car["carID"],
+                                },
+                              });
+                            }}
                             className="inline-block py-3 px-4 m-2 w-1/2 lg:w-full border border-[#E5E7EB] rounded-2xl
                               text-base text-body-color font-medium hover:border-primary transition cursor-pointer 
                               bg-red-500 hover:bg-red-600 text-gray-100"

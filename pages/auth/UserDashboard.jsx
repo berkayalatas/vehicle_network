@@ -1,34 +1,121 @@
-import { useAuth } from "../../contexts/AuthContext";
-import PrivateRoute from "../PrivateRoute";
 import React, { useState, useEffect } from "react";
+import PrivateRoute from "../PrivateRoute";
+import { useAuth } from "../../contexts/AuthContext";
 import { useRouter } from "next/dist/client/router";
+import { CalendarIcon } from "@heroicons/react/outline";
 import Nav from "../../components/navbar/Nav";
 import Image from "next/image";
-import { db } from "../../firebase_config";
-import { CalendarIcon } from "@heroicons/react/outline";
 import upcoming from "../../public/images/calendar.png";
 import previous from "../../public/images/previous.png";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import UpdateUser from "../../components/updateUser/UpdateUser";
+import { db } from "../../firebase_config";
+import { useCar } from "../../contexts/CarContext";
+import { UserCircleIcon } from "@heroicons/react/solid";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 function UserDashboard() {
   const router = useRouter();
-  const { currentUser } = useAuth();
-  /* States */
+  const { user } = useAuth();
+  const [userReservations, setUserReservations] = useState([]);
+  const [endedTrips, setEndedTrips] = useState([]);
+  const { timeConverter, timeStamptoDate, toTimestamp } = useCar();
+  const [loading, setLoading] = useState(false);
 
-  /* Filter upcomingRentals template */
-  // const upcomingRentals = car.filter(
-  //   (cr) =>
-  //     new Date(cr["endDate"].replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3")) >=
-  //     new Date()
-  // );
+  useEffect(() => {
+    //get user's reservations
+    async function fetchReservations() {
+      const reservations = db.collection("reservations");
+      reservations
+        .get()
+        .then((data) => {
+          data.docs.map((doc) => {
+            let reservationData = doc.data();
+            if (reservationData["user"]["userID"] == user.uid) {
+              setUserReservations([reservationData]);
+            }
+          });
+        })
+        .catch((error) => {
+          console.error("Failed to bring car", error);
+          setError(error);
+        });
+    }
+    //Find ended trips
+    async function findEndedReservations() {
+      const q = query(
+        collection(db, "reservations"),
+        where("reservationDetails.endDate", "<", `${toTimestamp(new Date())}`)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        setEndedTrips([{ docID: doc.id, docData: doc.data() }]);
+      });
+    }
+    /* After trip set availability to true*/
+    function changeAvailability() {
+      endedTrips?.forEach(async function (trip) {
+        const q = query(
+          collection(db, "cars"),
+          where("car.carID", "==", `${trip["docData"]["car"]["carID"]}`)
+        );
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          let carData = doc.data();
+          let docID = doc.id;
+
+          //UPDATE
+          db.collection("cars")
+            .doc(docID)
+            .update({
+              car: {
+                carID: carData["car"]["carID"],
+                location: {
+                  lng: carData["car"]["location"]["lng"],
+                  lat: carData["car"]["location"]["lat"],
+                },
+                city: carData["car"]["city"],
+                brand: carData["car"]["brand"],
+                model: carData["car"]["model"],
+                carImage: {
+                  img1: carData["car"]["carImage"]["img1"],
+                  img2: carData["car"]["carImage"]["img2"],
+                },
+                carDescription: carData["car"]["carDescription"],
+                numberOfDoor: carData["car"]["numberOfDoor"],
+                numberOfSeat: carData["car"]["numberOfSeat"],
+                power: carData["car"]["power"],
+                available: true,
+              },
+            })
+            .then(function () {
+              console.log("Availability updated");
+            });
+        });
+      });
+    }
+    fetchReservations();
+    findEndedReservations();
+    changeAvailability();
+  }, []);
+
+  /* Filter upcoming travels */
+  const upcomingRentalsArr = userReservations.filter(
+    (re) => timeStamptoDate(re?.["reservationDetails"]["endDate"]) >= new Date()
+  );
+
+  /* Filter previous road trips */
+  const previousRentalsArr = userReservations.filter(
+    (re) => timeStamptoDate(re?.["reservationDetails"]["endDate"]) < new Date()
+  );
 
   return (
     <div>
       <Nav />
 
       <div className="flex justify-center mt-5">
-        <h2 className="text-3xl text-blue-400 font-display font-semibold lg:text-left 
+        <h2
+          className="text-3xl text-blue-400 font-display font-semibold lg:text-left 
           xl:text-4xl xl:text-bold"
         >
           User Dashboard
@@ -46,7 +133,6 @@ function UserDashboard() {
 
       <div className="flex flex-col justify-center mt-4">
         <UpdateUser />
- 
         <div className="mt-2 flex justify-evenly flex-col md:flex-row mb-5">
           <div className="mt-10 flex flex-col justify-start">
             <h3
@@ -55,59 +141,127 @@ function UserDashboard() {
             >
               Upcoming Rentals
             </h3>
-            {/* Filter upcoming travels filter expired travels */}
-            <div className="mt-2 flex flex-col justify-evenly items-center">
-              {[].length > 0 ? (
-                [].map((r, key) => (
+            {/* Filter upcoming trips */}
+            <div className="mt-2 max-w-[350px] flex flex-col justify-evenly items-center">
+              {upcomingRentalsArr.length > 0 ? (
+                upcomingRentalsArr.map((r, key) => (
                   <div key={key} className="w-11/12 sm:w-full py-4 px-2">
                     <div className="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden">
                       <div className="relative pb-48 overflow-hidden">
                         <img
-                          className="absolute inset-0 h-full w-full object-cover"
-                          src={r.car["carImg"]}
+                          className="absolute cursor-pointer inset-0 h-full w-full object-cover transform duration-200 hover:scale-110"
+                          src={r.car["carImage"]["img1"]}
                           alt="Car Image"
+                          onClick={() => {
+                            router.push({
+                              pathname: "/auth/MyCarDetails",
+                              query: {
+                                city: r?.car["city"],
+                                carID: r?.car["carID"],
+                                brand: r?.car["brand"],
+                                lng: r?.car["location"]["lng"],
+                                lat: r?.car["location"]["lat"],
+                                startDate: r?.reservationDetails["startDate"],
+                                endDate: r?.reservationDetails["endDate"],
+                                price: r?.reservationDetails["price"],
+                              },
+                            });
+                          }}
                         />
                       </div>
                       <div className="p-4">
-                        <span className="inline-block px-2 py-1 leading-none bg-orange-200 text-orange-800 rounded-full font-semibold uppercase tracking-wide text-xs">
-                          {r.reservationDetails["city"]}
-                        </span>
-                        <h2 className="mt-2 mb-2 font-bold">
-                          {r.car["carTitle"]}
+                        <div className="flex flex-col align-center justify-center">
+                          <span
+                            className="inline-block m-2 px-3 py-2 w-2/5 text-center bg-blue-200 text-blue-800 
+                              rounded-full font-semibold uppercase tracking-wide text-sm"
+                          >
+                            {"📌" + " " + r.car["city"]}
+                          </span>
+                          <div className="m-2 text-left flex">
+                            <div>
+                              {r?.host["hostPhoto"] ? (
+                                <img
+                                  className="inline-block mr-2 h-5 w-5 lg:h-8 lg:w-8 rounded-full ring-1 ring-blue-500"
+                                  src={r?.host["hostPhoto"]}
+                                  alt="Avatar"
+                                />
+                              ) : (
+                                <UserCircleIcon className="h-6 w-6 lg:h-7 lg:w-7 text-blue-400" />
+                              )}
+                            </div>
+                            <div>
+                              {r?.host["hostEmail"]} <br />
+                              {r?.host["hostPhoneNumber"]}
+                            </div>
+                          </div>
+                        </div>
+
+                        <h2
+                          className="mt-2 mb-2 font-bold cursor-pointer font-uppercase"
+                          onClick={() => {
+                            router.push({
+                              pathname: "/auth/MyCarDetails",
+                              query: {
+                                city: r?.car["city"],
+                                carID: r?.car["carID"],
+                                brand: r?.car["brand"],
+                                lng: r?.car["location"]["lng"],
+                                lat: r?.car["location"]["lat"],
+                                startDate: r?.reservationDetails["startDate"],
+                                endDate: r?.reservationDetails["endDate"],
+                                price: r?.reservationDetails["price"],
+                              },
+                            });
+                          }}
+                        >
+                          <p
+                            className="
+                            font-semibold
+                            text-blue-600 text-xl
+                            sm:text-[22px]
+                            md:text-xl
+                            lg:text-[22px]
+                            xl:text-xl
+                            2xl:text-[22px]
+                            mb-4                                                      
+                            "
+                          >
+                            {r.car["brand"] + " " + r.car["model"]}
+                          </p>
                         </h2>
-                        <p className="text-sm">{r.car["carDescription"]}</p>
+                        <p className="text-md ">
+                          {r.car["carDescription"].length > 250
+                            ? r.car["carDescription"]
+                                .substring(0, 250)
+                                .concat("...")
+                            : r.car["carDescription"]}
+                        </p>
                         <div className="mt-3 flex items-center">
                           <span className="font-bold text-xl">
                             {" "}
-                            {r.car["totalCarPrice"]}
+                            {r.reservationDetails["totalPrice"]}
                           </span>
                           &nbsp;
-                          <span className="text-sm font-semibold">$</span>
+                          <span className="text-md font-semibold">€</span>
                         </div>
                       </div>
 
-                      <div className="p-4 border-t border-b text-sm text-gray-800">
+                      <div className="p-4 border-t border-b text-md text-gray-800">
                         <div className="flex justify-start align-middle items-center mb-1">
                           <div className="flex justify-end align-middle">
                             <div>
                               <CalendarIcon className="h-6 w-6 m-2" />
                             </div>
                             <div className="mt-2">
-                              from {r.reservationDetails["startDate"]} to{" "}
-                              {r.reservationDetails["endDate"]}
+                              from{" "}
+                              {timeConverter(r.reservationDetails["startDate"])}{" "}
+                              to{" "}
+                              {timeConverter(r.reservationDetails["endDate"])}
                             </div>
                           </div>
                         </div>
                       </div>
-                      <div className="p-4 flex items-center text-sm text-gray-600">
-                        <svg
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 fill-current text-blue-500"
-                        >
-                          <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                        </svg>
-                      </div>
+                      <div className="p-4 flex items-center text-sm text-gray-600"></div>
                     </div>
                   </div>
                 ))
@@ -148,74 +302,131 @@ function UserDashboard() {
               No Trips
             </h3>
 
-            {/* Filter previous travels filter expired travels */}
+            {/* Filter previous renting, filter expired renting */}
 
             <div className="mt-2 flex flex-col justify-evenly items-center">
-              {[].length > 0 ? (
-                []
-                  .filter(
-                    (rm) =>
-                      new Date(
-                        rm.reservationDetails["endDate"].replace(
-                          /(\d{2})-(\d{2})-(\d{4})/,
-                          "$2/$1/$3"
-                        )
-                      ) <= new Date()
-                  )
-                  .map((r, key) => (
-                    <div key={key} className="w-11/12 sm:w-10/12 py-4 px-2">
-                      <div className="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden">
-                        <div className="relative pb-48 overflow-hidden">
-                          <img
-                            className="absolute inset-0 h-full w-full object-cover"
-                            src={r.car["carImg"]}
-                            alt="Car Img"
-                          />
-                        </div>
-
-                        <div className="p-4">
-                          <span className="inline-block px-2 py-1 leading-none bg-orange-200 text-orange-800 rounded-full font-semibold uppercase tracking-wide text-xs">
-                            {r.reservationDetails["city"]}
+              {previousRentalsArr.length > 0 ? (
+                previousRentalsArr.map((r, key) => (
+                  <div key={key} className="w-11/12 sm:w-full py-4 px-2">
+                    <div className="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden">
+                      <div className="relative pb-48 overflow-hidden">
+                        <img
+                          className="absolute cursor-pointer inset-0 h-full w-full object-cover transform duration-200 hover:scale-110"
+                          src={r.car["carImage"]["img1"]}
+                          alt="Car Image"
+                          onClick={() => {
+                            router.push({
+                              pathname: "/auth/MyCarDetails",
+                              query: {
+                                city: r?.car["city"],
+                                carID: r?.car["carID"],
+                                brand: r?.car["brand"],
+                                lng: r?.car["location"]["lng"],
+                                lat: r?.car["location"]["lat"],
+                                startDate: r?.reservationDetails["startDate"],
+                                endDate: r?.reservationDetails["endDate"],
+                                price: r?.reservationDetails["price"],
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="p-4">
+                        <div className="flex flex-col align-center justify-center">
+                          <span
+                            className="inline-block m-2 px-3 py-2 w-2/5 text-center bg-blue-200 text-blue-800 
+                            rounded-full font-semibold uppercase tracking-wide text-sm"
+                          >
+                            {"📌" + " " + r.car["city"]}
                           </span>
-                          <h2 className="mt-2 mb-2 font-bold">
-                            {r.car["carTitle"]}
-                          </h2>
-                          <p className="text-sm">{r.car["carDescription"]}</p>
-                          <div className="mt-3 flex items-center">
-                            <span className="font-bold text-xl">
-                              {" "}
-                              {r.car["totalCarPrice"]}
-                            </span>
-                            &nbsp;
-                            <span className="text-sm font-semibold">$</span>
-                          </div>
-                        </div>
-
-                        <div className="p-4 border-t border-b text-sm text-gray-800">
-                          <div className="flex justify-start align-middle items-center mb-1">
-                            <div className="flex justify-end align-middle">
-                              <div>
-                                <CalendarIcon className="h-6 w-6 m-2" />
-                              </div>
-                              <div className="mt-2">
-                                from {r.reservationDetails["startDate"]} to{" "}
-                                {r.reservationDetails["endDate"]}
-                              </div>
+                          <div className="m-2 text-left flex">
+                            <div>
+                              {r?.host["hostPhoto"] ? (
+                                <img
+                                  className="inline-block mr-2 h-5 w-5 lg:h-8 lg:w-8 rounded-full ring-1 ring-blue-500"
+                                  src={r?.host["hostPhoto"]}
+                                  alt="Avatar"
+                                />
+                              ) : (
+                                <UserCircleIcon className="h-6 w-6 lg:h-7 lg:w-7 text-blue-400" />
+                              )}
+                            </div>
+                            <div>
+                              {r?.host["hostEmail"]} <br />
+                              {r?.host["hostPhoneNumber"]}
                             </div>
                           </div>
                         </div>
-                        <div className="p-4 flex items-center text-sm text-gray-600">
-                          <svg
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4 fill-current text-blue-500"
+
+                        <h2
+                          className="mt-2 mb-2 font-bold cursor-pointer font-uppercase"
+                          onClick={() => {
+                            router.push({
+                              pathname: "/auth/MyCarDetails",
+                              query: {
+                                city: r?.car["city"],
+                                carID: r?.car["carID"],
+                                brand: r?.car["brand"],
+                                lng: r?.car["location"]["lng"],
+                                lat: r?.car["location"]["lat"],
+                                startDate: r?.reservationDetails["startDate"],
+                                endDate: r?.reservationDetails["endDate"],
+                                price: r?.reservationDetails["price"],
+                              },
+                            });
+                          }}
+                        >
+                          <p
+                            className="
+                          font-semibold
+                          text-blue-600 text-xl
+                          sm:text-[22px]
+                          md:text-xl
+                          lg:text-[22px]
+                          xl:text-xl
+                          2xl:text-[22px]
+                          mb-4                                                      
+                          "
                           >
-                            <path d="M8.128 19.825a1.586 1.586 0 0 1-1.643-.117 1.543 1.543 0 0 1-.53-.662 1.515 1.515 0 0 1-.096-.837l.736-4.247-3.13-3a1.514 1.514 0 0 1-.39-1.569c.09-.271.254-.513.475-.698.22-.185.49-.306.776-.35L8.66 7.73l1.925-3.862c.128-.26.328-.48.577-.633a1.584 1.584 0 0 1 1.662 0c.25.153.45.373.577.633l1.925 3.847 4.334.615c.29.042.562.162.785.348.224.186.39.43.48.704a1.514 1.514 0 0 1-.404 1.58l-3.13 3 .736 4.247c.047.282.014.572-.096.837-.111.265-.294.494-.53.662a1.582 1.582 0 0 1-1.643.117l-3.865-2-3.865 2z"></path>
-                          </svg>
+                            {r.car["brand"] + " " + r.car["model"]}
+                          </p>
+                        </h2>
+                        <p className="text-md ">
+                          {r.car["carDescription"].length > 250
+                            ? r.car["carDescription"]
+                                .substring(0, 250)
+                                .concat("...")
+                            : r.car["carDescription"]}
+                        </p>
+                        <div className="mt-3 flex items-center">
+                          <span className="font-bold text-xl">
+                            {" "}
+                            {r.reservationDetails["totalPrice"]}
+                          </span>
+                          &nbsp;
+                          <span className="text-md font-semibold">€</span>
                         </div>
                       </div>
+
+                      <div className="p-4 border-t border-b text-md text-gray-800">
+                        <div className="flex justify-start align-middle items-center mb-1">
+                          <div className="flex justify-end align-middle">
+                            <div>
+                              <CalendarIcon className="h-6 w-6 m-2" />
+                            </div>
+                            <div className="mt-2">
+                              from{" "}
+                              {timeConverter(r.reservationDetails["startDate"])}{" "}
+                              to{" "}
+                              {timeConverter(r.reservationDetails["endDate"])}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-4 flex items-center text-sm text-gray-600"></div>
                     </div>
-                  ))
+                  </div>
+                ))
               ) : (
                 <div className="flex flex-col justify-center align-middle text-center my-2">
                   <Image

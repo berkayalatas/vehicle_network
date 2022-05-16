@@ -24,9 +24,7 @@ import Image from "next/image";
 import { storage } from "../../firebase_config";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import delete_img from "../../public/logos/clearImg.png";
-import upload from "../../public/logos/upload.png";
-//import { toast, ToastContainer } from "react-toastify";
-
+ 
 /* Mapbox Access Token */
 mapboxgl.accessToken = process.env.mapbox_access_token;
 

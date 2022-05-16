@@ -58,7 +58,7 @@ function UpdateUser() {
             <img
               className="m-2 inline-block h-28 w-28 lg:w-32 lg:h-32 rounded-full ring-2 ring-blue-500"
               src={userPhotoUrl}
-              alt="User Avatar"
+              alt="Avatar"
             />
           ) : (
             <div

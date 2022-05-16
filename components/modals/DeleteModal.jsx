@@ -14,12 +14,12 @@ import { db } from "../../firebase_config";
 import { ToastContainer } from "react-toastify";
 import { useCar } from "../../contexts/CarContext";
 
-function DeleteModal({ setOpen, carID }) {
+function DeleteModal({ setOpen }) {
   const router = useRouter();
   const { user } = useAuth();
   const { notifySuccess } = useCar();
   const [loading, setLoading] = useState(false);
-
+  const { carID } =  router.query;
   async function handleDelete() {
     try {
       setLoading(true);
@@ -34,6 +34,7 @@ function DeleteModal({ setOpen, carID }) {
       querySnapshot.forEach((doc) => {
         console.log(doc.id);
         const myData = doc.data();
+        console.log(myData);
         if (myData["car"]["carID"] == carID) {
           docID = doc.id;
         }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { GlobeAltIcon, SearchIcon } from "@heroicons/react/solid";
 import "react-date-range/dist/styles.css"; // main style file for date picker
@@ -41,8 +41,8 @@ function Nav({ placeholder }) {
   const handleDatePicker = (ranges) => {
     setStartDate(ranges.selection.startDate);
     setEndDate(ranges.selection.endDate);
+    console.log(ranges.selection.endDate)
   };
-
   /* CLEAR SEACRH INPUT */
   const resetSearchInput = () => {
     setSearchInput("");

@@ -6,6 +6,7 @@ import HowItWorks from "../components/about/HowItWorks";
 import About from "../components/about/About";
 import LocationSection from "../components/locations/LocationSection";
 import Link from "next/link";
+import PopularCars from "../components/popularCars/PopularCars";
 
 export default function Home({ locationData }) {
   return (
@@ -31,6 +32,7 @@ export default function Home({ locationData }) {
         <HowItWorks />
         <About />
         <LocationSection locationData={locationData} />
+        <PopularCars />
       </main>
 
       <footer>
@@ -48,7 +50,6 @@ export async function getServerSideProps() {
       console.log(error);
     });
 
- 
   return {
     props: {
       locationData,

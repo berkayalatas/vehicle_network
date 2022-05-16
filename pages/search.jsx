@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Nav from "../components/navbar/Nav";
 import Footer from "../components/footer/Footer";
 import { useRouter } from "next/dist/client/router";
-import { useAuth } from "../contexts/AuthContext";
 import { db } from "../firebase_config";
 import Error from "../components/errors/Error";
 import CarCards from "../components/car_cards/CarCards";
@@ -14,7 +13,6 @@ import { useCar } from "../contexts/CarContext";
 
 function Search() {
   const router = useRouter();
-  const { user } = useAuth();
   const { location, startDate, endDate } = router.query;
   const [cars, setCars] = useState([]);
   const [error, setError] = useState("");
@@ -50,15 +48,16 @@ function Search() {
           const filterByInput = cars?.filter(
             (theCar) => theCar.car.city.toLowerCase() == location?.toLowerCase()
           );
-          const filterByDate = filterByInput?.filter(
+          /* compare car's available date and data picker - check if somebody already rented */
+          const filterByDateAndAvailability = filterByInput?.filter(
             (car, key) =>
               Date.parse(startDate) / 1000 >=
                 car.reservationDetails["startDate"] &&
-              Date.parse(endDate) / 1000 <= car.reservationDetails["endDate"]
+              Date.parse(endDate) / 1000 <= car.reservationDetails["endDate"] && car.car['available']
           );
           setLoading(true);
-          setCars(filterByDate);
-          setTempData(filterByDate);
+          setCars(filterByDateAndAvailability);
+          setTempData(filterByDateAndAvailability);
           setLoading(false);
           // } else {
           //   setCars(cars);
@@ -87,11 +86,7 @@ function Search() {
     setCars([...sortedBySeatNumber]);
   }
 
-  function filteredByPower(power) {
-    const sortedByPower = tempData.filter((car) => car.car["power"] === power);
-    setCars([...sortedByPower]);
-  }
-
+ 
   /* get longitude-latitude */
   var cordinates = cars.map((data) => ({
     longitude: data["car"]["location"]["lng"],
