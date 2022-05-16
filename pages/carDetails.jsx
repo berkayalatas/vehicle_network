@@ -265,14 +265,13 @@ function carDetails() {
                             <h3 className="text-lg md:text-xl  text-gray-900 font-medium">
                               {`${
                                 car[0]?.reservationDetails["price"]
-                              } € x ${numberOfDay} ${
+                              } € x ${parseInt(numberOfDay)} ${
                                 numberOfDay == 1 ? "night" : "nights"
                               } `}
                             </h3>
                             <div className="text-xl md:text-2xl  font-semibold text-black">
                               {`${
-                                numberOfDay *
-                                car[0]?.reservationDetails["price"]
+                                (numberOfDay * car[0]?.reservationDetails["price"]).toFixed(2)
                               } €`}
                             </div>
                           </div>
