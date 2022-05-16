@@ -299,7 +299,7 @@ function UserDashboard() {
               className="text-center text-2xl text-blue-400 font-display font-semibold  xl:text-3xl
                             xl:text-bold"
             >
-              No Trips
+              Previous Rentals
             </h3>
 
             {/* Filter previous renting, filter expired renting */}
