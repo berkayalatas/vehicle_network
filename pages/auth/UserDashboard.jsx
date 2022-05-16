@@ -25,23 +25,24 @@ function UserDashboard() {
   useEffect(() => {
     //get user's reservations
     async function fetchReservations() {
+      setLoading(true);
       const reservations = db.collection("reservations");
-      reservations
-        .get()
-        .then((data) => {
+      reservations.get().then((data) => {
+        let reservationsData = [];
           data.docs.map((doc) => {
             let reservationData = doc.data();
             if (reservationData["user"]["userID"] == user.uid) {
-              setUserReservations([reservationData]);
+              reservationsData.push(reservationData)
+              setUserReservations(reservationsData);
+              setLoading(false);
             }
           });
         })
         .catch((error) => {
-          console.error("Failed to bring car", error);
-          setError(error);
+          console.log("Failed to bring car");
         });
     }
-    //Find ended trips
+    // //Find ended trips
     async function findEndedReservations() {
       const q = query(
         collection(db, "reservations"),
@@ -100,15 +101,16 @@ function UserDashboard() {
   }, []);
 
   /* Filter upcoming travels */
-  const upcomingRentalsArr = userReservations.filter(
+  const upcomingRentalsArr = userReservations?.filter(
     (re) => timeStamptoDate(re?.["reservationDetails"]["endDate"]) >= new Date()
   );
 
   /* Filter previous road trips */
-  const previousRentalsArr = userReservations.filter(
+  const previousRentalsArr = userReservations?.filter(
     (re) => timeStamptoDate(re?.["reservationDetails"]["endDate"]) < new Date()
   );
-
+ 
+ 
   return (
     <div>
       <Nav />
@@ -143,8 +145,8 @@ function UserDashboard() {
             </h3>
             {/* Filter upcoming trips */}
             <div className="mt-2 max-w-[350px] flex flex-col justify-evenly items-center">
-              {upcomingRentalsArr.length > 0 ? (
-                upcomingRentalsArr.map((r, key) => (
+              {upcomingRentalsArr?.length > 0 ? (
+                upcomingRentalsArr?.map((r, key) => (
                   <div key={key} className="w-11/12 sm:w-full py-4 px-2">
                     <div className="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden">
                       <div className="relative pb-48 overflow-hidden">
@@ -305,8 +307,8 @@ function UserDashboard() {
             {/* Filter previous renting, filter expired renting */}
 
             <div className="mt-2 max-w-[350px] flex flex-col justify-evenly items-center">
-              {previousRentalsArr.length > 0 ? (
-                previousRentalsArr.map((r, key) => (
+              {previousRentalsArr?.length > 0 ? (
+                previousRentalsArr?.map((r, key) => (
                   <div key={key} className="w-11/12 sm:w-full py-4 px-2">
                     <div className="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden">
                       <div className="relative pb-48 overflow-hidden">
