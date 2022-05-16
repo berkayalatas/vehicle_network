@@ -304,7 +304,7 @@ function UserDashboard() {
 
             {/* Filter previous renting, filter expired renting */}
 
-            <div className="mt-2 flex flex-col justify-evenly items-center">
+            <div className="mt-2 max-w-[350px] flex flex-col justify-evenly items-center">
               {previousRentalsArr.length > 0 ? (
                 previousRentalsArr.map((r, key) => (
                   <div key={key} className="w-11/12 sm:w-full py-4 px-2">
