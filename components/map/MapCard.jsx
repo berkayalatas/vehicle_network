@@ -2,9 +2,11 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/dist/client/router";
 import noCar from '../../public/images/noCar.png';
+import { useCar } from '../../contexts/CarContext';
 
-function MapCard({ carImg, description, model, brand, price }) {
+function MapCard({location,carID,startDate,endDate, lng, lat, carImg, description, model, brand, price }) {
   const router = useRouter();
+  const { toTimestamp } = useCar();
 
   return (
     <div
@@ -50,11 +52,14 @@ function MapCard({ carImg, description, model, brand, price }) {
             onClick={() => {
               router.push({
                 pathname: "/carDetails",
-                // query: {
-                //   location: location,
-                //   startDate: startDate,
-                //   endDate: endDate,
-                // },
+                query: {
+                  location: location ,
+                  carID: carID,
+                  startDate: toTimestamp(startDate),
+                  endDate: toTimestamp(endDate),
+                  lng: lng,
+                  lat:lat,
+                },
               });
             }}
           >

@@ -78,6 +78,12 @@ function Map({ carData, loading, center }) {
                   longitude={marker["car"]["location"]["lng"]}
                 >
                   <MapCard
+                    location={marker["car"]["city"]}
+                    carID={marker["car"]["carID"]}
+                    startDate={marker["reservationDetails"]["startDate"]}
+                    endDate={marker["reservationDetails"]["startDate"]}
+                    lng={marker["car"]['location']['lng']}
+                    lat = {marker["car"]['location']['lat']}
                     carImg={marker["car"]["carImage"]["img1"]}
                     description={marker["car"]["carDescription"]}
                     model={marker["car"]["model"]}
