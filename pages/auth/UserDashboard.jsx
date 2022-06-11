@@ -65,7 +65,7 @@ function UserDashboard() {
           let carData = doc.data();
           let docID = doc.id;
 
-          //UPDATE
+          //UPDATE DB
           db.collection("cars")
             .doc(docID)
             .update({
