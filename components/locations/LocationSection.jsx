@@ -2,8 +2,9 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/dist/client/router";
 import noCity from "../../public/images/noCity.png";
+import locationData from './loactionData.json';
 
-function LocationSection({ locationData }) {
+function LocationSection() {
   const router = useRouter();
   return (
     <>

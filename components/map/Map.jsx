@@ -13,10 +13,12 @@ import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-load
 import "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
 import carImg from "../../public/images/car.png";
 
+
 mapboxgl.accessToken = process.env.mapbox_access_token;
 
 function Map({ carData, loading, center }) {
   const [selectedPin, setSelectedPin] = useState({});
+
 
   const [viewport, setViewport] = useState({
     width: "100%",

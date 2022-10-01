@@ -8,7 +8,7 @@ import LocationSection from "../components/locations/LocationSection";
 import Link from "next/link";
 import PopularCars from "../components/popularCars/PopularCars";
 
-export default function Home({ locationData }) {
+export default function Home() {
   return (
     <div>
       <Head>
@@ -31,7 +31,7 @@ export default function Home({ locationData }) {
         <Banner />
         <HowItWorks />
         <About />
-        <LocationSection locationData={locationData} />
+        <LocationSection />
         <PopularCars />
       </main>
 
@@ -41,18 +41,4 @@ export default function Home({ locationData }) {
     </div>
   );
 }
-
-export async function getServerSideProps() {
-  //Fetch location data
-  const locationData = await fetch("https://jsonkeeper.com/b/95S7")
-    .then((response) => response.json())
-    .catch((error) => {
-      console.log(error);
-    });
-
-  return {
-    props: {
-      locationData,
-    },
-  };
-}
+ 
